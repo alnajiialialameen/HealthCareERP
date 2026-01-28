@@ -1,0 +1,995 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="card">
+            <div class="card-body">
+                <h4>ادارة  غير المكفولين</h4>
+                <p class="d-flex justify-content-end">
+                    <button onClick="goToHome()" type="button" class="btn btn-secondary btn-sm">
+                        <i class="bx bx-arrow-back me-2"></i>
+                        رجوع
+                    </button>
+                </p>
+
+
+
+                <table id="myTable" class="table table-bordered  table-dark" style="width:100% ;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+                    <thead>
+                        <tr>
+
+                   
+                            <th>الرقم</th>
+                            <th>الاسم </th>
+                            <th>الجنس </th>
+                            <th>الادارة </th>
+                            <th>مضاف </th>
+                            <th>عمليات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Create Modal -->
+
+
+
+
+
+<div class="modal fade" id="familyMemberModel" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel4">افراد العائلة</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+
+                <table id="familyMemberTable" class="table table-bordered  table-dark" style="width:100% ;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+                    <thead>
+                        <tr>
+
+
+                            <th>الرقم</th>
+                            <th>الاسم </th>
+                            <th>صلة القرابة </th>
+                            <th>الحالة الاجتماعية </th>
+                            <th>مضاف</th>
+                            <th>عمليات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+               @*  <button type="button" class="btn btn-primary">Save changes</button> *@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Update Modal -->
+
+
+
+
+<div class="modal fade" id="exceptionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel3">اضافة استثناء</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              
+                           
+                        <!-- Basic Layout -->
+                <form id="formAddException" name="formAddException" class="needs-validation" novalidate>
+
+                   
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="addFamilymemebernameshow">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text"
+                                   class="form-control"
+                                   id="addFamilymemebernameshow"
+                                   readonly
+                                   required />
+
+                            <div class="invalid-feedback">
+                                الاسم مطلوب
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="addexception">الاستثناء</label>
+                        <div class="col-sm-10">
+                            <select class="form-control select2"
+                                    id="addexception"
+                                    name="addexception"
+                                    required>
+                            </select>
+
+                            <div class="invalid-feedback">
+                                الرجاء اختيار نوع الاستثناء
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <input id="addFamilymemeberid" name="addFamilymemeberid" hidden type="text" />
+                    <input id="addFamilymemebername" name="addFamilymemebername" hidden type="text" />
+                    <input id="addFamilymemeberemployeeId" name="addFamilymemeberemployeeId" hidden type="text" />
+                    <input id="addFamilymemeberrelativeRelationId" name="addFamilymemeberrelativeRelationId" hidden type="text" />
+                    
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="file-upload">الملف</label>
+                        <div class="col-sm-10">
+                            <input type="file"
+                                   class="form-control"
+                                   id="file-upload"
+                                   name="user_file"
+                                   required />
+
+                            <div class="invalid-feedback">
+                                الرجاء رفع ملف
+                            </div>
+
+                        </div>
+                    </div>
+                  
+                
+                    <div class="row justify-content-end">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">اضافة</button>
+
+                        </div>
+                    </div>
+                </form>
+                        
+                            
+                                
+                              
+                           
+                
+                 
+             
+            </div>
+           @*  <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div> *@
+        </div>
+    </div>
+</div>
+
+
+
+<div class="bs-toast toast toast-placement-ex m-2 fade top-0 end-0"
+     id="mainToast"
+     role="alert"
+     aria-live="assertive"
+     aria-atomic="true"
+     data-bs-delay="3000">
+
+    <div class="toast-header">
+        <i class="bx me-2" id="toastIcon"></i>
+        <div class="me-auto fw-semibold" id="toastTitle"></div>
+        <small>الآن</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+    </div>
+
+    <div class="toast-body" id="toastBody"></div>
+</div>
+
+
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // قراءة الرابط من الـ ViewBag وتخزينه في متغير جافاسكريبت
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+            var myDataTable=  $('#myTable').DataTable({
+            "ajax": {
+                "url": apiBaseUrl + "api/Beneficiary/NotConsumedEmployees",
+                "type": "GET",
+                "dataSrc": "data"
+            },
+            "columns": [
+                  {
+            "data": "id",
+            "width": "20px",        // تحديد العرض المطلوب
+            "className": "dt-center" // اختياري: لتوسيط المحتوى داخل العمود
+        },
+                { "data": "name" },
+         { "data": "genderName" },
+           { "data": "departmentName" },
+             {
+                      "data": "isConsumed", "width": "50px", "render": function (data) {
+                                      var cssClass,clientType;
+                                      if (data === true)
+                                      {
+                                          cssClass = "bg-danger";
+                                          clientType = "مضاف";
+                                      }else
+                                      {
+                                          clientType = "غير مضاف";
+                                          cssClass = "bg-success";
+                                      }
+
+
+                                      return '<span class="badge ' + cssClass + '">' + clientType + '</span>'
+
+                                  }
+                              },
+
+
+
+
+
+
+
+                {
+                    "data": null,
+                    "orderable": false,
+                    "width": "30px", // تحديد العرض هنا لضمان التطبيق
+                    "className": "text-center", // اختياري: لتوسط الأيقونة في العمود
+                                        "render": function (data, type, row) {
+
+            let addButton = '';
+
+            if (row.isConsumed !== true) {
+                addButton = `
+                    <button type="button"
+                            class="btn btn-sm btn-success"
+                            onclick="AddToBenficary(${row.id})"
+                            title="إضافة">
+                        <i class="bx bx-plus"></i>
+                    </button>
+                `;
+            }
+
+            return `
+                <div class="d-flex justify-content-center gap-2">
+                    ${addButton}
+
+                    <button type="button"
+                            class="btn btn-sm btn-info"
+                            onclick="viewFamily(${row.id})"
+                            title="أفراد العائلة">
+                        <i class="bx bx-group"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+
+
+                }
+                ],
+
+        
+        "rowCallback": function (row, data) {
+            if (data.isConsumed === true) {
+                $(row).addClass("table-warning"); // أو css مباشرة
+            }
+        },
+            "language": {
+                "search": "بحث:",
+                "paginate": {
+                    "next": "التالي",
+                    "previous": "السابق"
+                }
+                // ... بقية الترجمة
+            },
+            // تفعيل خاصية التحديد التلقائي للعرض
+            "autoWidth": false
+        });
+
+
+         var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+        var form = document.getElementById('addForm');
+
+
+
+
+     
+
+        });
+
+
+
+
+
+
+            function showToast(title, message, type = 'success') {
+
+            const toastElement = $('#mainToast');
+            const toastTitle = $('#toastTitle');
+            const toastBody  = $('#toastBody');
+            const toastIcon  = $('#toastIcon');
+
+            // تعيين العنوان والنص
+            toastTitle.text(title);
+            toastBody.text(message);
+
+            // إزالة أي ألوان أو أيقونات قديمة
+            toastElement.removeClass('bg-success bg-danger bg-warning bg-info');
+            toastIcon.removeClass('bx-check bx-error bx-info-circle bx-error-circle');
+
+            // تحديد النوع
+            switch (type) {
+                case 'success':
+                    toastElement.addClass('bg-success');
+                    toastIcon.addClass('bx bx-check');
+                    break;
+
+                case 'error':
+                    toastElement.addClass('bg-danger');
+                    toastIcon.addClass('bx bx-error-circle');
+                    break;
+
+                case 'warning':
+                    toastElement.addClass('bg-warning');
+                    toastIcon.addClass('bx bx-error');
+                    break;
+
+                case 'info':
+                    toastElement.addClass('bg-info');
+                    toastIcon.addClass('bx bx-info-circle');
+                    break;
+            }
+
+            // تشغيل Toast
+            const toast = new bootstrap.Toast(toastElement[0]);
+            toast.show();
+        }
+
+
+
+            function goToHome() {
+               
+            // بناء الرابط مع إضافة معرف المستفيد بشكل صحيح
+            var url ="/Beneficiary";
+
+            // التوجيه إلى الرابط المطلوب
+            window.location.href = url;
+        }
+
+
+        //   function AddToBenficary(employeeId) {
+
+        //     var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+        //     var HrAPIUrl = "@ViewBag.HrAPIUrl";
+
+        //     Swal.fire({
+        //         title: 'جاري جلب البيانات...',
+        //         allowOutsideClick: false,
+        //         didOpen: () => Swal.showLoading()
+        //     });
+
+        //     $.ajax({
+        //         url: `${HrAPIUrl}api/Employees/${employeeId}`,
+        //         type: "GET",
+        //         success: function (response) {
+
+        //             Swal.close();
+
+        //             if (response.status !== "Success") {
+        //                 Swal.fire('خطأ!', 'تعذر جلب بيانات الموظف', 'error');
+        //                 return;
+        //             }
+
+        //             const employee = response.data;
+
+        //             const dataToUpdate = {
+        //                     ClientId: parseInt(employee.id), // التأكد من أنه رقم
+        //                     YearId: 2,
+        //                     Name:employee.name,
+        //                     IsStoped: false,
+        //                     IsEmployee: true,
+        //                     Id: "0" // تأكد هل السيرفر يتوقع string أم int؟ إذا كان int امسح علامات التنصيص
+        //                 };
+
+
+        //             Swal.fire({
+        //                 title: 'جاري الحفظ...',
+        //                 allowOutsideClick: false,
+        //                 didOpen: () => Swal.showLoading()
+        //             });
+
+        //             // alert(dataToUpdate.Name)
+        //             $.ajax({
+        //                 url: apiBaseUrl + "api/Beneficiary/AddEmployeeToBeneficiaryCommand",
+        //                 type: "POST", // أو PUT حسب API
+        //                 contentType: "application/json",
+        //                 data: JSON.stringify(dataToUpdate),
+        //                 success: function (res) {
+
+        //                     Swal.close();
+
+
+        //                     if (res.status === "Success") {
+        //                         $('#myTable').DataTable().ajax.reload(null, false);
+        //                       showToast('نجاح', 'تمت إضافة بنجاح', 'success');
+        //                     } else {
+        //                      showToast('خطأ', 'حدث خطأ أثناء الحفظ', 'error');
+        //                     }
+        //                 },
+        //                 error: function () {
+        //                     Swal.close();
+        //                     showToast("حدث خطأ أثناء الحفظ", true);
+        //                 }
+        //             });
+        //         },
+        //         error: function () {
+        //             Swal.close();
+        //             Swal.fire('خطأ!', 'فشل الاتصال بالسيرفر', 'error');
+        //         }
+        //     });
+        // }
+
+
+
+        function AddToBenficary(employeeId)
+        {
+
+                    var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+                    var HrAPIUrl = "@ViewBag.HrAPIUrl";
+
+                    // تحميل بيانات الموظف
+                    Swal.fire({
+                        title: 'جاري جلب البيانات...',
+                        allowOutsideClick: false,
+                        didOpen: () => Swal.showLoading()
+                    });
+
+                    $.ajax({
+                        url: `${HrAPIUrl}api/Employees/${employeeId}`,
+                        type: "GET",
+                        success: function (response) {
+
+                            Swal.close();
+
+                            if (response.status !== "Success") {
+                                Swal.fire('خطأ!', 'تعذر جلب بيانات الموظف', 'error');
+                                return;
+                            }
+
+                            const employee = response.data;
+
+                            // إنشاء FormData
+                            var formData = new FormData();
+                            formData.append("ClientId", employee.id);
+                            formData.append("YearId", 2);
+                            formData.append("Name", employee.name);
+                            formData.append("IsStoped", false);
+                            formData.append("IsEmployee", true);
+                            formData.append("Id", 0);
+                            formData.append("ClientParentId", employee.id);
+                            Swal.fire({
+                                title: 'جاري الحفظ...',
+                                allowOutsideClick: false,
+                                didOpen: () => Swal.showLoading()
+                            });
+
+                            $.ajax({
+                               url:   `${apiBaseUrl}api/Beneficiary`,
+                               //url: "https://localhost:2001/api/Beneficiary/",
+                                type: "POST",
+                                data: formData,
+                                processData: false, // مهم
+                                contentType: false, // مهم
+                                success: function (res) {
+
+                                    Swal.close();
+
+                                    if (res.status === "Success") {
+                                        $('#myTable').DataTable().ajax.reload(null, false);
+                                        showToast('نجاح', 'تمت إضافة بنجاح', 'success');
+                                    } else {
+                                        showToast('خطأ', 'حدث خطأ أثناء الحفظ', 'error');
+                                    }
+                                },
+                                error: function () {
+                                    Swal.close();
+                                    showToast("حدث خطأ أثناء الحفظ", true);
+                                }
+                            });
+                        },
+                        error: function () {
+                            Swal.close();
+                            Swal.fire('خطأ!', 'فشل الاتصال بالسيرفر', 'error');
+                        }
+                    });
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+           function viewFamily(EmployeeId)
+           {
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+            // 1. تدمير الجدول القديم إذا كان موجوداً لتجنب خطأ Re-initialization
+            if ($.fn.DataTable.isDataTable('#familyMemberTable')) {
+                $('#familyMemberTable').DataTable().destroy();
+                $('#familyMemberTable tbody').empty(); // تنظيف محتوى الجدول تماماً
+            }
+
+            // 2. بناء الجدول باستخدام الربط الجديد
+            var table = $('#familyMemberTable').DataTable({
+                "ajax": {
+                    // التعديل هنا: استخدام Query String كما في الرابط الخاص بك
+                    "url": apiBaseUrl + "api/Beneficiary/CompareBeneficiary/" + EmployeeId,
+                    "type": "GET",
+                    // "data": { "EmployeeId": EmployeeId }, // سيرسلها كـ ?EmployeeId=xxx
+                    "dataSrc": "data.familyMembers"
+                },
+                "columns": [
+                    { "data": "id", "width": "20px", "className": "dt-center" },
+                    { "data": "name" },
+                    { "data": "relativeRelationName" },
+                    { "data": "maritalStatusName" },
+                    {
+                        "data": "isConsumed",
+                        "render": function (data) {
+                            var cssClass = data === true ? "bg-danger" : "bg-success";
+                            var text = data === true ? "مضاف" : "غير مضاف";
+                            return `<span class="badge ${cssClass}">${text}</span>`;
+                        }
+                    },
+                    {
+                        "data": null,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            let addButton = !row.isConsumed ?
+                                `<button type="button" class="btn btn-sm btn-success" onclick="AddFamilyMember(${row.id})"><i class="bx bx-plus"></i></button>` : '';
+                            return `<div class="d-flex justify-content-center gap-2">${addButton}</div>`;
+                        }
+                    }
+                ],
+
+
+        "rowCallback": function (row, data) {
+            if (data.isConsumed === true) {
+                $(row).addClass("table-warning"); // أو css مباشرة
+            }
+        },
+                "language": {
+                    "search": "بحث:",
+                    "paginate": { "next": "التالي", "previous": "السابق" }
+                },
+                "autoWidth": false
+            });
+
+          
+            $('#familyMemberModel').modal('show');
+            $('#familyMemberModel').on('shown.bs.modal', function () {
+                table.columns.adjust();
+            });
+        }
+
+
+          function AddFamilyMember(employeeId) 
+          {
+
+          
+
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+            var HrAPIUrl = "@ViewBag.HrAPIUrl";
+
+            Swal.fire({
+                target: '#familyMemberModel', // 👈 مهم جدًا
+                title: 'جاري جلب البيانات...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            $.ajax({
+                url: `${HrAPIUrl}api/FamilyMembers/${employeeId}`,
+                type: "GET",
+                success: function (response) {
+
+                    if (response.status !== "Success" || !response.data) {
+                        Swal.close();
+                        Swal.fire('خطأ', 'تعذر جلب بيانات الموظف', 'error');
+                        return;
+                    }
+
+                    const employee = response.data;
+                   alert(employee.relativeRelationId);
+
+                    // ===============================
+                    // 1️⃣ التحقق من البيانات
+                    // ===============================
+                    let errors = [];
+
+                    const bDate = employee.birthDate;
+                    const gId = 1;
+                    const mStatusId = employee.maritalStatusId;
+
+                    if (!bDate || bDate.trim?.() === "") {
+                        errors.push("تاريخ الميلاد مفقود");
+                    } else {
+                        const parsedDate = new Date(bDate);
+                        if (isNaN(parsedDate.getTime())) {
+                            errors.push("تاريخ الميلاد غير صالح");
+                        }
+                    }
+
+                    if (!gId || Number(gId) === 0) {
+                        errors.push("يرجى تحديد جنس الموظف");
+                    }
+
+                    if (!mStatusId || Number(mStatusId) === 0) {
+                        errors.push("يرجى تحديد الحالة الاجتماعية");
+                    }
+
+                    if (errors.length > 0) {
+                        Swal.close();
+                        showToast("بيانات ناقصة", errors.join(" • "), true);
+                        return;
+                    }
+                    //alert(employee.employeeId);
+                    // ===============================
+                    // 2️⃣ تجهيز FormData
+                    // ===============================
+                    var formData = new FormData();
+                    formData.append("ClientId", employee.id);
+                    formData.append("Name", employee.name);
+                    formData.append("IsStoped", false);
+                    formData.append("YearId", 2);
+                    formData.append("IsEmployee", false);
+                    formData.append("BirthDate", bDate);
+                    formData.append("GenderId", gId);
+                    formData.append("MaritalStatusId", mStatusId);
+                    formData.append("ClientParentId", employee.employeeId);
+                     formData.append("RelativeRelationId", employee.relativeRelationId);
+                
+                    Swal.fire({
+                        target: '#familyMemberModel', 
+                        title: 'جاري الحفظ...',
+                        allowOutsideClick: false,
+                        didOpen: () => Swal.showLoading()
+                    });
+
+                    // ===============================
+                    // 3️⃣ إرسال البيانات
+                    // ===============================
+                    $.ajax({
+                         url: `${apiBaseUrl}api/Beneficiary`, // ❌ لم يتم التعديل
+                       // url: "https://localhost:2001/api/Beneficiary/",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+
+                        success: function (res) {
+                            Swal.close();
+
+                            if (res.status === "Success" || res.status === "success") {
+                                $('#myTable').DataTable().ajax.reload(null, false);
+                                showToast("تمت الإضافة بنجاح");
+                            } else {
+                                Swal.fire({
+                                    title: 'غير مطابق للشروط',
+                                    html: `
+                                        <div style="text-align:right">
+                                            <p class="text-danger">${res.message}</p>
+                                            <p>هل تريد فتح طلب استثناء؟</p>
+                                        </div>
+                                    `,
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'نعم',
+                                    cancelButtonText: 'إلغاء'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        ///---------------------غير ------------------
+                                        $('#exceptionModal').modal('show');
+                                        $('#addFamilymemeberid').val(employee.id);
+                                        $('#addFamilymemebername').val(employee.name);
+                                        $('#addFamilymemebernameshow').val(employee.name);
+                                       
+                                    }
+                                });
+                            }
+                        },
+
+                        error: function (res) {
+
+                            Swal.close();
+
+                          
+                            console.log(res.responseJSON);
+
+                            const apiResponse = res.responseJSON;
+
+                            const message =
+                                apiResponse?.message ||
+                                apiResponse?.Message ||
+                                'حدث خطأ غير متوقع';
+
+                            Swal.fire({
+                                target: '#familyMemberModel', // 👈 مهم جدًا
+                                title: 'غير مطابق للشروط',
+                                html: `
+                                    <div style="text-align:right">
+                                        <p class="text-danger">${message}</p>
+                                        <p>هل تريد فتح طلب استثناء؟</p>
+                                    </div>
+                                `,
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'نعم',
+                                cancelButtonText: 'إلغاء'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                  
+                                    ///الكود الحقيقي
+                                    $('#exceptionModal').modal('show');
+                                    $('#addFamilymemeberid').val(employee.id);
+                                    $('#addFamilymemebername').val(employee.name);
+                                    $('#addFamilymemebernameshow').val(employee.name);
+                                    $('#addFamilymemeberemployeeId').val(employee.employeeId);
+                                      $('#addFamilymemeberrelativeRelationId').val(employee.relativeRelationId);
+
+                                    
+                                       getExceptionId();
+                                }
+                            });
+                        }
+                    });
+                },
+
+                error: function () {
+                    Swal.close();
+                    Swal.fire('خطأ', 'فشل الاتصال بسيرفر بيانات الموظفين', 'error');
+                }
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+
+                $('#formAddException').on('submit', function (e) {
+            AddFamilyMemberToToBenficaryHasException(e);
+        });
+                     function AddFamilyMemberToToBenficaryHasException(e) {
+
+            // 1️⃣ منع إعادة تحميل الصفحة
+            e.preventDefault();
+
+            const form = document.getElementById('formAddException');
+
+            // 2️⃣ Bootstrap Validation
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return;
+            }
+
+            // 3️⃣ Validation خاص لـ Select2
+            if (!$('#addexception').val()) {
+                $('#addexception').addClass('is-invalid');
+                return;
+            } else {
+                $('#addexception').removeClass('is-invalid').addClass('is-valid');
+            }
+
+            // 4️⃣ Validation الملف
+            var fileInput = $('#file-upload')[0].files[0];
+            if (!fileInput) {
+                $('#file-upload').addClass('is-invalid');
+                return;
+            } else {
+                $('#file-upload').removeClass('is-invalid').addClass('is-valid');
+            }
+
+            // ===============================
+            // 5️⃣ جلب القيم
+            // ===============================
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+            var addFamilymemeberid = $('#addFamilymemeberid').val();
+            var addFamilymemebername = $('#addFamilymemebername').val();
+            var ExceptionTypeId = $('#addexception').val();
+            var ClientParentId = $('#addFamilymemeberemployeeId').val();
+              var RelativeRelationId = $('#addFamilymemeberrelativeRelationId').val();
+            
+            // ===============================
+            // 6️⃣ إنشاء FormData
+            // ===============================
+            var formData = new FormData();
+
+            formData.append("ClientId", parseInt(addFamilymemeberid));
+            formData.append("YearId", 2);
+            formData.append("Name", addFamilymemebername);
+            formData.append("IsStoped", "false");
+            formData.append("IsEmployee", "false");
+            formData.append("ClientParentId", ClientParentId);
+            formData.append("ExceptionTypeId", ExceptionTypeId);
+            formData.append("ReportPath", fileInput);
+            formData.append("RelativeRelationId", RelativeRelationId);
+
+            // ===============================
+            // 7️⃣ SweetAlert Loading
+            // ===============================
+            Swal.fire({
+                title: 'جاري الحفظ...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            // ===============================
+            // 8️⃣ Ajax Request
+            // ===============================
+            $.ajax({
+                 url: `${apiBaseUrl}api/Beneficiary`,
+                // url: "https://localhost:2001/api/Beneficiary/",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    Swal.close();
+
+                    if (res.status === "Success") {
+                        $('#exceptionModal').modal('hide');
+                        $('#familyMemberTable').DataTable().ajax.reload(null, false);
+
+                        // تنظيف الفورم
+                        form.reset();
+                        form.classList.remove('was-validated');
+                        $('.is-valid, .is-invalid').removeClass('is-valid is-invalid');
+
+                        showToast('نجاح', 'تمت إضافة الاستثناء بنجاح', 'success');
+                    } else {
+                        showToast('خطأ', 'حدث خطأ أثناء الحفظ', 'error');
+                    }
+                },
+                error: function () {
+                    Swal.close();
+                    showToast('خطأ', 'حدث Exception أثناء الحفظ', 'error');
+                }
+            });
+        }
+
+
+
+
+
+                  function getExceptionId() {
+                 
+            $('#addexception').empty();
+            $('#addexception').append('<option value="-1" selected disabled>-- اختر الاستثناء --</option>');
+
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+            $.ajax({
+                url: apiBaseUrl + "api/ExceptionType",
+                type: "GET",
+                success: function (result) {
+
+                    if (result.status !== "Success" || !result.data) return;
+
+                    var html = "";
+
+                    $.each(result.data, function (key, item) {
+
+                        // تجاهل القيم الفارغة
+                        if (item.name && item.name.trim() !== "") {
+                            html += `<option value="${item.id}">${item.name}</option>`;
+                        }
+                    });
+
+                    $('#addexception').append(html);
+
+                    if ($('#addexception').hasClass("select2-hidden-accessible")) {
+                        $('#addexception').trigger('change.select2');
+                    }
+                },
+                error: function (err) {
+                    console.error(err.responseText);
+                }
+            });
+        }
+
+                      $('#exceptionModal').on('hidden.bs.modal', function () {
+            const form = document.getElementById('formAddException');
+            form.reset();
+            form.classList.remove('was-validated');
+            $('.is-valid, .is-invalid').removeClass('is-valid is-invalid');
+        });
+
+
+                (() => {
+            'use strict';
+
+            const forms = document.querySelectorAll('.needs-validation');
+
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                    form.classList.add('was-validated');
+
+                }, false);
+            });
+        })();
+
+
+
+
+
+    </script>
+}

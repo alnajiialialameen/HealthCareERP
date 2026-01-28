@@ -1,0 +1,310 @@
+﻿@{
+    ViewData["Title"] = "User Manager";
+}
+
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="card">
+            <div class="card-body">
+                <p>
+
+                    <button type="button"
+                            class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#createUserModal">
+                        اضافة
+                    </button>
+                </p>
+
+                <table id="myTable" class="table table-striped table-bordered table-dark" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>اسم المستخدم </th>
+                            <th>رقم الهاتف </th>
+                            <th>الصلاحيات </th>
+                            <th>عمليات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Create User Modal -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel3">اضافة مستخدم جديد</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAddUser" name="formAddUser" class="needs-validation" novalidate>
+                    <div class="row mb-3">
+                        <input id="email" hidden class="visually-hidden"  />
+                        <input id="userId" hidden class="visually-hidden"  />
+                        <div class="col-sm-6">
+                            <label class="col-sm-12 col-form-label d-block" for="fullName">الاسم الكامل</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="fullName"
+                                   placeholder="الاسم الكامل"
+                                   required />
+                            <div class="invalid-feedback">
+                                الاسم الكامل مطلوب
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="col-sm-12 col-form-label d-block" for="userName">اسم المستخدم</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="userName"
+                                   placeholder="اسم المستخدم"
+                                   required />
+                            <div class="invalid-feedback">
+                                الاسم مطلوب
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="col-sm-12 col-form-label d-block" for="phoneNumber">رقم الهاتف</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="phoneNumber"
+                                   placeholder="رقم الهاتف"
+                                   required />
+                            <div class="invalid-feedback">
+                                رقم الهاتف مطلوب
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="col-sm-12 col-form-label d-block" for="password">كلمة المرور</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="password"
+                                   placeholder="كلمة المرور"
+                                   required />
+                            <div class="invalid-feedback">
+                                كلمة المرور مطلوبة
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="col-sm-12 col-form-label d-block" for="confirmPassword">تاكيد كلمة المرور</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="confirmPassword"
+                                   placeholder="تاكيد كلمة المرور"
+                                   required />
+                            <div class="invalid-feedback">
+                                تاكيد كلمة المرور مطلوبة
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="col-sm-12 col-form-label d-block" for="roles">الصلاحية</label>
+                            <select type="text" class="form-select" id="roles"></select>
+                            <div class="invalid-feedback">
+                                الصلاحية مطلوبة
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-end">
+                        <div class="col-sm-10">
+                            <button id="btnSumbit" type="submit" class="btn btn-primary">اضافة</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        // قراءة الرابط من الـ ViewBag وتخزينه في متغير جافاسكريبت
+        var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+        $(document).ready(function () {
+             $('#myTable').DataTable({
+                "ajax": {
+                    "url": apiBaseUrl + "api/Auth/GetUsers",
+                    "type": "GET",
+                    "dataSrc": "data"
+                },
+                "columns": [
+                    { "data": "firstName" },
+                    { "data": "userName" },
+                    { "data": "phoneNumber" },
+                    {
+                        "data": "roles",
+                        "orderable": false,
+                        "width": "70px", // تحديد العرض هنا لضمان التطبيق
+                        "className": "text-center", // اختياري: لتوسط الأيقونة في العمود
+                        "render": function (data, type, row) {
+                                if (!data) 
+                                    return "-";
+
+                                return data.map(r =>
+                                    `<span class="badge bg-primary me-1">${r}</span>`
+                                ).join("-");
+                        }
+                    },
+                    {
+                        "data": null,
+                        "orderable": false,
+                        "width": "70px", // تحديد العرض هنا لضمان التطبيق
+                        "className": "text-center", // اختياري: لتوسط الأيقونة في العمود
+                        "render": function (data, type, row) {
+                            return `
+                                <div class="dropdown">
+                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                           <a class="dropdown-item" href="javascript:void(0);" onClick='editUser(${JSON.stringify(row)})'>
+                                            <i class="bx bx-edit-alt me-1"></i> تعديل
+                                        </a>
+                                        <a class="dropdown-item" href="javascript:void(0);" onclick="viewDetails(${row.id})">
+                                            <i class="bx bx-show-alt me-1"></i> تفاصيل
+                                        </a>
+                                        <a class="dropdown-item text-danger" href="javascript:void(0);" onclick="deleteYear(${row.id})">
+                                            <i class="bx bx-trash me-1"></i> حذف
+                                        </a>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                ],
+                "language": {
+                    "search": "بحث:",
+                    "paginate": {
+                        "next": "التالي",
+                        "previous": "السابق"
+                    }
+                    // ... بقية الترجمة
+                },
+                // تفعيل خاصية التحديد التلقائي للعرض
+                "autoWidth": false
+            });
+        
+            // var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+            var form = document.getElementById('formAddUser');
+            loadRoles();
+            $('#formAddUser').on('submit', function (e) {
+                e.preventDefault();
+
+                if (!form.checkValidity()) {
+                    e.stopPropagation();
+                    $(form).addClass('was-validated');
+                    return;
+                }
+
+                      var fullName = $('#fullName').val().trim();
+                      var userName = $('#userName').val().trim();
+                      var phoneNumber = $('#phoneNumber').val().trim();
+                      var password = $('#password').val().trim();
+                      var confirmPassword = $('#confirmPassword').val().trim();
+                      var roles = $('#roles').val();
+                      var userId = $('#userId').val();
+                      // var email = $('#email').val()??'userName@example.com';
+                       var email = $('#email').val().trim() || 'userName@example.com';
+
+                      var data = 
+                      {
+                             id :userId,
+                            firstName: fullName,
+                            lastName: fullName,
+                            userName: userName,
+                            password: password,
+                            phoneNumber: phoneNumber,
+                            email:email,
+                            userRoles: [roles]
+                      };
+
+                      debugger;
+                      console.log(data);
+                         var submitText = $('#btnSumbit').text();
+                         var url = '';
+                         var method = '';
+                        if(submitText == 'تعديل'){
+                            url = apiBaseUrl + "api/Auth/UpdateUserAsync";
+                            method= "PUT";
+                        }else{
+                            url = apiBaseUrl + "api/Auth/Register";
+                            method= "POST";
+                        }
+
+                $.ajax({
+                    url: url,
+                    type: method,
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    success: function (response)
+                    {
+                        // إغلاق المودال وتفريغ الحقول
+                        // $('#createModal').modal('hide');
+                        form.reset();
+                        $(form).removeClass('was-validated');
+
+                        // تحديث الجدول
+                        $('#myTable').DataTable().ajax.reload();
+                        // showToast("تمت إضافة السنة " + yearValue + " بنجاح");
+                    },
+                    error: function (xhr) 
+                    {
+                        var errorMsg = xhr.responseJSON ? xhr.responseJSON.message : "خطأ في الاتصال";
+                        alert(errorMsg);
+                        //  showToast(errorMsg,true);
+                    }
+                });
+            });
+     });
+
+     function loadRoles()
+     {
+           $('#roles').empty();
+              $.get(`${apiBaseUrl}api/Auth/GetRoles`, null, function(response){
+               if(response.status =="Success"){
+                 var data = response.data;
+
+               if (Array.isArray(data)) {
+                   data.forEach(function (r) {
+                          $('#roles').append(`<option value="${r}">${r}</option>`);
+                   });
+               }
+            }
+        });
+     }
+
+        function editUser(data){
+            debugger;
+            console.clear();
+            console.log(data);
+            $('#userId').val(data.id)
+            $('#email').val(data.email)
+            $('#fullName').val(data.firstName)
+            $('#userName').val(data.userName)
+            $('#phoneNumber').val(data.phoneNumber)
+            $('#roles').val(data.roles[0]);
+
+            $('#btnSumbit').removeClass('btn-primary').addClass('btn-warning');
+            $('#btnSumbit').text('تعديل');
+
+            var modal = new bootstrap.Modal(document.getElementById('createUserModal'));
+            modal.show();
+        }
+     </script>
+    }

@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+
+
+
+<!-- Small Modal -->
+
+
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // قراءة الرابط من الـ ViewBag وتخزينه في متغير جافاسكريبت
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+            $('#myTable').DataTable({
+                "ajax": {
+                    // دمج الرابط الأساسي مع مسار الـ Endpoint
+                    "url": apiBaseUrl + "api/Year",
+                    "type": "GET",
+                    "dataSrc": "data"
+                },
+                "columns": [
+                    { "data": "id" },
+                    { "data": "name" }
+                ],
+                "language": {
+                    "search": "بحث:",
+                    "paginate": {
+                        "first": "الأول",
+                        "last": "الأخير",
+                        "next": "التالي",
+                        "previous": "السابق"
+                    }
+                }
+            });
+        });
+    </script>
+}

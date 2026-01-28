@@ -1,0 +1,385 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+
+    <input id="employeeId" name="employeeId" value="@ViewBag.EmployeeId" class="form-control visually-hidden" />
+    <!-- Sidebar -->
+    <div class="col-3 border p-0">
+
+        <div class="list-group list-group-flush" role="tablist">
+
+            <!-- profile -->
+            <a class="list-group-item list-group-item-action active"
+               data-bs-toggle="list"
+               href="#profile">البيانات الاساسية</a>
+
+            <!-- family -->
+            <a class="list-group-item list-group-item-action"
+               data-bs-toggle="list"
+               href="#family">أفراد العائلة</a>
+
+            <!-- exceptions -->
+            <a class="list-group-item list-group-item-action"
+               data-bs-toggle="list"
+               href="#exceptions">الاستثناءات</a>
+
+            <!-- cardNoArchive -->
+            <a class="list-group-item list-group-item-action"
+               data-bs-toggle="list"
+               href="#cardNoArchive">أرشيف البطاقات</a>
+
+            <!-- others -->
+            <a class="list-group-item list-group-item-action"
+               data-bs-toggle="list"
+               href="#others">أخرى</a>
+
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="col-9">
+        <div class="tab-content">
+
+            <div class="tab-pane fade show active" id="profile">
+                <h4 class="border-bottom border-4">البيانات الاساسية</h4>
+                <div class="row">
+                    <div class="col-6">
+                        <h3>الاسم</h3>
+                        <input class="form-control" disabled id="EmployeeName" value="يوسف عبدالرحمن يوسف محمد" />
+                    </div>
+
+                    <div class="col-6">
+                        <h3>الادارة</h3>
+                        <input class="form-control" disabled id="EmployeeDepartment" value="يوسف عبدالرحمن يوسف محمد" />
+                    </div>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-3">
+                        <h3>تاريخ التعيين</h3>
+                        <input class="form-control" disabled id="EmployeeHireDate" value="23/03/2021" />
+                    </div>
+
+                    <div class="col-3">
+                        <h3>تاريخ الميلاد</h3>
+                        <input class="form-control" disabled id="EmployeeBirthDate" value="06/12/1991" />
+                    </div>
+
+                    <div class="col-3">
+                        <h3>النوع</h3>
+                        <input class="form-control" disabled id="EmployeeGender" value="ذكر" />
+                    </div>
+
+                    <div class="col-3">
+                        <h3>الحالة الاجتماعية</h3>
+                        <input class="form-control" disabled id="EmployeeMartialStatus" value="متزوج" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="family">
+                <div class="row">
+                    <div id="nodataBlock"
+                         class="col-lg-12 col-md-6 col-sm-4 d-flex flex-column justify-content-center align-items-center text-center"
+                         style="min-height: 300px;">
+
+                        <h4 class="border-bottom border-4 w-100 mb-4">أفراد العائلة</h4>
+
+                        <h2 class="fw-bold display-6 text-muted">
+                            لا يوجد أفراد عائلة مكفولين
+                        </h2>
+                    </div>
+
+                    <div id="datafoundBlock" class="col-lg-12 col-md-6 col-sm-4 visually-hidden">
+                        <h4 class="border-bottom border-4">أفراد العائلة</h4>
+                        <table class="table table-bordered table-striped" >
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>الاسم</th>
+                                    <th>النوع</th>
+                                    <th>صلة القرابة</th>
+                                    <th>حالة الكفالة</th>
+                                    <th>تاريخ الميلاد</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="tblFamilyMembersBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="exceptions">
+                <div class="row">
+                    <div id="exceptionNodataBlock"
+                         class="col-lg-12 col-md-6 col-sm-4 d-flex flex-column justify-content-center align-items-center text-center"
+                         style="min-height: 300px;">
+
+                        <h4 class="border-bottom border-4 w-100 mb-4">الاستثناءات</h4>
+
+                        <h2 class="fw-bold display-6 text-muted">
+                            لا يوجد أفراد عائلة مستثنيين
+                        </h2>
+                    </div>
+
+                    <div id="exceptionDatafoundBlock" class="col-lg-12 col-md-6 col-sm-4 visually-hidden">
+                        <h4 class="border-bottom border-4">الاستثناءات</h4>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>الاسم</th>
+                                    <th>نوع الاستثناء</th>
+                                    <th>العام</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblExceptionsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="cardNoArchive">
+                <div class="row">
+                    <div id="cardHistoryNodataBlock"
+                         class="col-lg-12 col-md-6 col-sm-4 d-flex flex-column justify-content-center align-items-center text-center"
+                         style="min-height: 300px;">
+
+                        <h4 class="border-bottom border-4 w-100 mb-4">أرشيف البطاقات</h4>
+
+                        <h2 class="fw-bold display-6 text-muted">
+                            لا يوجد بطاقات مكفولين سابقة
+                        </h2>
+                    </div>
+
+                    <div id="cardHistoryDatafoundBlock" class="col-lg-12 col-md-6 col-sm-4 visually-hidden">
+                        <h4 class="border-bottom border-4">أرشيف البطاقات</h4>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>اسم المستفيد</th>
+                                    <th>رقم البطاقة</th>
+                                    <th>السنة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblCardNosHistoryBody"></tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="others">
+                <h4 class="border-bottom border-4">Login Sessions</h4>
+                <img src="" class="img-fluid" id="profileImage" />
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" data-bs-backdrop="static"
+     data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">خطاب الاستثناء</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                
+				<div id="preview" style="margin-top:10px;"></div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">خروج</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var HrAPIUrl = "@ViewBag.HrAPIUrl";
+        var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
+        var employeeId = $('#employeeId').val();
+
+
+        function getProfileData(){
+
+            // main data
+            $.get(`${HrAPIUrl}api/Employees/${employeeId}`, {}, function(response){
+                var data = response.data;
+
+                $('#EmployeeName').val(data.name)
+                $('#EmployeeDepartment').val(data.departmentName)
+                $('#EmployeeGender').val(data.genderName)
+                $('#EmployeeHireDate').val(data.hireDate)
+                $('#EmployeeBirthDate').val(data.birthDate)
+                $('#EmployeeMartialStatus').val(data.martialStatusName)
+                    
+                // console.clear();
+                // console.log(data);
+            });
+
+            // family members
+            $.get(`${ApiBaseUrl}api/Beneficiary/CompareBeneficiary/${employeeId}`, {}, function(response){
+                var data = response.data;
+
+                     // نظف الجدول قبل التعبئة
+                $('#tblFamilyMembersBody').empty();
+
+                // لف على افراد الأسرة
+                if (data.familyMembers && data.familyMembers.length > 0) {
+                    $('#nodataBlock').addClass('visually-hidden');
+                    $('#datafoundBlock').removeClass('visually-hidden');
+                    data.familyMembers.forEach(function (member) {
+
+                        var row = `
+                            <tr>
+                                <td>${member.id ?? ''}</td>
+                                <td>${member.name ?? ''}</td>
+                                <td>${member.genderName ?? ''}</td>
+                                <td>${member.relativeRelationName ?? ''}</td>
+                                <td>${member.isConsumed == true ? '<span class="text-success p-2  fs-4">مكفول</span>' : '<span class="text-danger p-2  fs-4">غير مكفول</span>'}</td>
+                                <td>${member.birthDate ?? ''}</td>
+                            </tr>
+                        `;
+
+                        $('#tblFamilyMembersBody').append(row);
+                    });
+                    }else{
+                         $('#nodataBlock').removeClass('visually-hidden');
+                        $('#datafoundBlock').addClass('visually-hidden');
+                    }
+                // console.clear();
+                // console.log(data);
+            });
+
+            // exceptions
+            $.get(`${ApiBaseUrl}api/Beneficiary/GetBeneficiaryExceptions/${employeeId}`, {}, function(response){
+                var data = response.data;
+                console.log(data);
+                     // نظف الجدول قبل التعبئة
+                $('#tblExceptionsBody').empty();
+
+                // لف على افراد الأسرة
+                if (data && data.length > 0) {
+                    $('#exceptionNodataBlock').addClass('visually-hidden');
+                    $('#exceptionDatafoundBlock').removeClass('visually-hidden');
+                    data.forEach(function (member) {
+                        var row = `
+                            <tr>
+                                <td>${member.id ?? ''}</td>
+                                <td>${member.name ?? ''}</td>
+                                <td>${member.exceptionTypeName ?? ''}</td>
+                                <td>${member.yearName ?? ''}</td>
+                                <td>
+                                    <button type="button"
+                                            class="btn btn-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal"
+                                            onclick="previewFile('${member.exceptionReportPath}')">
+                                        عرض الخطاب
+                                </td>
+                                </td>
+                            </tr>
+                        `;
+
+                        $('#tblExceptionsBody').append(row);
+                    });
+                    }else{
+                         $('#nodataBlock').removeClass('visually-hidden');
+                        $('#datafoundBlock').addClass('visually-hidden');
+                    }
+                // console.clear();
+                // console.log(data);
+            });
+
+            // cardNo Archive
+            $.get(`${ApiBaseUrl}api/Beneficiary/CardNosHistory/${employeeId}`, {}, function(response){
+                var data = response.data;
+
+                     // نظف الجدول قبل التعبئة
+                $('#tblCardNosHistoryBody').empty();
+
+                // لف على افراد الأسرة
+                if (data && data.length > 0) {
+                    $('#cardHistoryNodataBlock').addClass('visually-hidden');
+                    $('#cardHistoryDatafoundBlock').removeClass('visually-hidden');
+                    data.forEach(function (card) {
+
+                        var row = `
+                            <tr>
+                                <td>${card.id ?? ''}</td>
+                                <td>${card.clientName ?? ''}</td>
+                                <td>${card.cardNo ?? ''}</td>
+                                <td>${card.yearName ?? ''}</td>
+                            </tr>
+                        `;
+
+                        $('#tblCardNosHistoryBody').append(row);
+                    });
+                    }else{
+                         $('#cardHistoryNodataBlock').removeClass('visually-hidden');
+                        $('#cardHistoryDatafoundBlock').addClass('visually-hidden');
+                    }
+                // console.clear();
+                // console.log(data);
+            });
+        }
+        $(document).ready(function () {
+            getProfileData();
+        });
+    </script>
+
+
+    <script>
+        function previewFile(url){
+            var filePath = `${ApiBaseUrl}${url}`;
+            const previewDiv = document.getElementById('preview');
+            previewDiv.innerHTML = ''; // مسح القديم
+            console.log(filePath);
+
+            // تحديد نوع الملف من الامتداد
+            if(!filePath)
+            {
+                previewDiv.innerHTML = 'نوع الملف غير مدعوم';
+                previewDiv.style.color = 'red';
+                previewDiv.style.fontSize = '22px';
+                return;
+            }
+            const ext = filePath.split('.').pop().toLowerCase();
+
+            if(['jpg','jpeg','png','gif','bmp'].includes(ext)) {
+                const img = document.createElement('img');
+                img.src = filePath;
+                img.style.maxWidth = '100%';
+                img.style.height = 'auto';
+                previewDiv.appendChild(img);
+            }
+            else if(ext === 'pdf') {
+                const iframe = document.createElement('iframe');
+                iframe.src = filePath + '#toolbar=0&navpanes=0&scrollbar=0';
+                iframe.style.width = '100%';
+                iframe.style.height = '500px';
+                iframe.style.border = 'none';
+                previewDiv.appendChild(iframe);
+            }
+            else {
+                previewDiv.innerHTML = 'نوع الملف غير مدعوم';
+                previewDiv.style.color = 'red';
+                previewDiv.style.fontSize = '22px';
+            }
+        }
+    </script>
+
+}

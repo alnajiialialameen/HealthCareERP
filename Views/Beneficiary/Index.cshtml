@@ -1,0 +1,483 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+        <div class="card">
+            <div class="card-body">
+                <h4>ادارة المكفولين</h4>
+                <p class="d-flex justify-content-between">
+                   
+
+                    <button type="button"
+                            class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#createModal">
+                        اضافة
+                    </button>
+
+                    <button type="button"
+                            onclick="GetNotGuarantee()" class="btn btn-secondary">
+                            
+                       غير المكفوليين
+                    </button>
+
+
+                </p>
+
+                <table id="myTable" class="table table-striped table-bordered table-dark" style="width:100%">
+                    <thead>
+                        <tr>
+
+                            @* "id": 1722,
+                            "name": "معتز محمد عثمان احمد",
+                            "hireDate": null,
+                            "martialStatusId": null,
+                            "departmentId": null,
+                            "genderId": null,
+                            "gender": "ذكر",
+                            "grade": "الثامنة",
+                            "department": "ادارة الهندسة الاستشارية",
+                            "employmetType": "توظيف", *@
+                            <th>الرقم</th>
+                            <th>الاسم </th>
+                            <th>رقم البطاقة </th>
+                            <th>استثناء </th>
+                            <th> تاريخ اصدار </th>
+                            <th> تاريخ انتهاء </th>
+                            <th>  ؟اعاقة </th>
+                            <th>عمليات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Create Modal -->
+
+
+
+
+
+<div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel4">Modal title</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col mb-3">
+                        <label for="nameExLarge" class="form-label">Name</label>
+                        <input type="text" id="nameExLarge" class="form-control" placeholder="Enter Name" />
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col mb-0">
+                        <label for="emailExLarge" class="form-label">Email</label>
+                        <input type="text" id="emailExLarge" class="form-control" placeholder="xxxx@xxx.xx" />
+                    </div>
+                    <div class="col mb-0">
+                        <label for="dobExLarge" class="form-label">DOB</label>
+                        <input type="text" id="dobExLarge" class="form-control" placeholder="DD / MM / YY" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Update Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <form id="updateForm" class="needs-validation" novalidate>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <input type="hidden" id="edit_id" />
+                    <h5 class="modal-title">تعديل الاستثناء</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="edit_name" class="form-label">السنة</label>
+                            <input type="text" id="edit_name" class="form-control" placeholder="مثلاً: 2026"
+                                   required />
+                            <div class="invalid-feedback">
+                                الرجاء إدخال اسم الاستثناء
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"> تعديل </button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="bs-toast toast toast-placement-ex m-2 fade bg-success top-0 end-0"
+     id="successToast"
+     role="alert"
+     aria-live="assertive"
+     aria-atomic="true"
+     data-bs-delay="3000">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-semibold">إشعار النجاح</div>
+        <small>الآن</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="successToastBody">
+        تمت إضافة السنة بنجاح!
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // قراءة الرابط من الـ ViewBag وتخزينه في متغير جافاسكريبت
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+                  $('#myTable').DataTable({
+            "ajax": {
+                 "url": apiBaseUrl + "api/Beneficiary",
+                "type": "GET",
+                "dataSrc": "data"
+            },
+            "columns": [
+                  {
+            "data": "id",
+            "width": "20px",        // تحديد العرض المطلوب
+            "className": "dt-center" // اختياري: لتوسيط المحتوى داخل العمود
+        },
+       { "data": "name" },
+           { "data": "cardNo" },
+              { "data": "exceptionTypeName" },
+
+                { "data": "cardIssueDate" },
+                  { "data": "cardEndDate" },
+                 {
+                        "data": "hasDisability", "width": "50px", "render": function (data) {
+                                       var cssClass,clientType;
+                                       if (data === null || data ===false)
+                                       {
+                                           cssClass = "bg-success";
+                                           clientType = "لا";
+                                       }else
+                                       {
+                                            clientType = "نعم";
+                                           cssClass = "bg-warning";
+                                       }
+
+
+                                       return '<span class="badge ' + cssClass + '">' + clientType + '</span>'
+
+                                   }
+                               },
+
+
+
+
+
+          
+
+
+
+
+
+
+                {
+                    "data": null,
+                    "orderable": false,
+                    "width": "30px", // تحديد العرض هنا لضمان التطبيق
+                    "className": "text-center", // اختياري: لتوسط الأيقونة في العمود
+                    "render": function (data, type, row) {
+                        return `
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="manageDisease(${row.id})">
+                                        <i class="bx bx-edit-alt me-1"></i> الامراض
+                                    </a>
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="viewDetails(${row.id})">
+                                        <i class="bx bx-show-alt me-1"></i> تفاصيل
+                                    </a>
+                                    <a class="dropdown-item text-danger" href="javascript:void(0);" onclick="deleteYear(${row.id})">
+                                        <i class="bx bx-trash me-1"></i> حذف
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            ],
+            "language": {
+                "search": "بحث:",
+                "paginate": {
+                    "next": "التالي",
+                    "previous": "السابق"
+                }
+                // ... بقية الترجمة
+            },
+            // تفعيل خاصية التحديد التلقائي للعرض
+            "autoWidth": false
+        });
+
+
+         var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+        var form = document.getElementById('addForm');
+
+
+
+
+        $('#addForm').on('submit', function (e) {
+            e.preventDefault();
+
+            if (!form.checkValidity()) {
+                e.stopPropagation();
+                $(form).addClass('was-validated');
+                return;
+            }
+
+            var value = $('#name').val().trim();
+            var data = { name: value };
+
+            $.ajax({
+                url: apiBaseUrl + "api/ExceptionType",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    // إغلاق المودال وتفريغ الحقول
+                    $('#createModal').modal('hide');
+                    form.reset();
+                    $(form).removeClass('was-validated');
+
+                    // تحديث الجدول
+                    $('#myTable').DataTable().ajax.reload();
+
+                     // تعريف الـ Toast باستخدام Bootstrap المدمج في القالب
+
+
+
+                      showToast("تمت إضافة استثناء " + yearValue + " بنجاح");
+
+                },
+                error: function (xhr) {
+                    var errorMsg = xhr.responseJSON ? xhr.responseJSON.message : "خطأ في الاتصال";
+
+
+                     showToast(errorMsg,true);
+                }
+            });
+        });
+
+        });
+
+
+          function deleteYear(id) {
+           var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+             // تعريف الـ Toast باستخدام Bootstrap المدمج في القالب
+             var toastElement = document.getElementById('successToast');
+             var toast = new bootstrap.Toast(toastElement);
+            Swal.fire({
+                title: 'هل أنت متأكد؟',
+                text: "لن تتمكن من التراجع عن هذا الحذف!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#696cff',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'نعم، احذفها!',
+                cancelButtonText: 'إلغاء'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // هنا تضع طلب الـ AJAX للحذف
+                    $.ajax({
+                        url: apiBaseUrl + "api/ExceptionType/" + id,
+                        type: "DELETE",
+                        success: function (response) {
+                      $('#myTable').DataTable().ajax.reload();
+
+
+                     showToast("تمت حذف  بنجاح");
+
+                        },
+                error: function (xhr) {
+                    var errorMsg = xhr.responseJSON ? xhr.responseJSON.message : "خطأ";
+
+                    // عرض Toast أحمر في حالة الخطأ
+
+                    showToast(errorMsg,true);
+                }
+                    });
+                }
+            });
+        }
+
+
+
+          function showToast(message, isError = false) {
+            const toastElement = $('#successToast');
+            const toastBody = $('#successToastBody');
+
+            // تغيير الرسالة
+            toastBody.text(message);
+
+            // تغيير اللون إذا كان خطأ (اختياري)
+            if (isError) {
+                toastElement.removeClass('bg-success').addClass('bg-danger');
+            } else {
+                toastElement.removeClass('bg-danger').addClass('bg-success');
+            }
+
+            // تشغيل التوست باستخدام Bootstrap 5 API
+            const toast = new bootstrap.Toast(toastElement[0]);
+            toast.show();
+        }
+
+
+            function manageDisease(id) {
+            // بناء الرابط مع إضافة معرف المستفيد بشكل صحيح
+            var url = "/BeneficiaryDisease/BeneficiaryDisease/" + id;
+
+            // التوجيه إلى الرابط المطلوب
+            window.location.href = url;
+        }
+          function GetNotGuarantee() {
+            // بناء الرابط مع إضافة معرف المستفيد بشكل صحيح
+            var url = "Beneficiary/NotGuarantee";
+
+            // التوجيه إلى الرابط المطلوب
+            window.location.href = url;
+        }
+        
+
+            function editYear(id)
+            {
+             var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+             /// تحميل
+
+            Swal.fire({
+                title: 'جاري جلب البيانات...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            $.ajax({
+                url: apiBaseUrl + "api/ExceptionType/" + id,
+                type: "GET",
+                success: function (response) {
+                    Swal.close(); // إغلاق رسالة التحميل
+
+
+                    if (response.status === "Success") {
+                        $('#edit_id').val(response.data.id);
+                        $('#edit_name').val(response.data.name);
+                        //---------اكتب بي كود التعديل هنا بناء علي Api-------
+                          $('#updateForm').on('submit', function (e) {
+              e.preventDefault();
+
+            if (!this.checkValidity()) {
+                $(this).addClass('was-validated');
+                return;
+            }
+
+            const yearId = $('#edit_id').val();
+            const dataToUpdate = {
+                id: parseInt(yearId),
+                name: $('#edit_name').val()
+            };
+
+            // إظهار سبينر التحميل في SweetAlert (فقط أثناء الانتظار)
+            Swal.fire({
+                title: 'جاري الحفظ...',
+                didOpen: () => { Swal.showLoading(); },
+                allowOutsideClick: false
+            });
+
+            $.ajax({
+                url: apiBaseUrl + "api/ExceptionType",
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify(dataToUpdate),
+                success: function (response) {
+                    Swal.close(); // إغلاق سبينر التحميل
+                    $('#updateModal').modal('hide');
+                    $('#myTable').DataTable().ajax.reload();
+
+                    // استدعاء التوست الخاص بك
+                    showToast("تم تعديل  بنجاح!");
+                },
+                error: function (xhr) {
+                    Swal.close();
+                    // إظهار توست خطأ
+                    showToast("حدث خطأ أثناء التعديل", true);
+                }
+            });
+        });
+
+
+                        $('#updateModal').modal('show');
+                    }
+                },
+                error: function (xhr) {
+                    Swal.fire('خطأ!', 'تعذر جلب بيانات السنة', 'error');
+                }
+
+            });
+
+
+        
+        }
+
+    </script>
+}
