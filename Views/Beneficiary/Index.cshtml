@@ -1,483 +1,1888 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+<style>
+	/* Modal */
+	.custom-modal {
+		min-height: 600px;
+		border-radius: 18px;
+		box-shadow: 0 25px 60px rgba(0,0,0,.25);
+	}
+
+	/* Sidebar */
+	.sidebar {
+		background: #f8f9fa;
+		border-left: 1px solid #ddd;
+	}
+
+		.sidebar .list-group-item {
+			border: none;
+			padding: 16px 18px;
+			font-weight: 600;
+			color: #555;
+		}
+
+			.sidebar .list-group-item.active {
+				background: linear-gradient(135deg, #696cff, #5a5cff);
+				color: #fff;
+			}
+
+			.sidebar .list-group-item:hover {
+				background-color: #eef0ff;
+			}
+
+	/* Content */
+	.content-area {
+		background: #fafafa;
+	}
+
+	/* Section title */
+	.section-title {
+		font-weight: 700;
+		margin-bottom: 25px;
+		padding-bottom: 6px;
+		border-bottom: 3px solid #696cff;
+	}
+
+	/* Info cards */
+	.info-card {
+		background: #fff;
+		padding: 15px;
+		border-radius: 14px;
+		box-shadow: 0 6px 18px rgba(0,0,0,.08);
+	}
+
+		.info-card label {
+			font-size: 14px;
+			color: #777;
+			margin-bottom: 6px;
+			display: block;
+		}
+
+		.info-card .form-control {
+			background: #f9fafb;
+			border: 1px solid #e0e0e0;
+			font-weight: 600;
+		
+		}
+
+	/* Tables */
+	.table {
+		background: #fff;
+		border-radius: 12px;
+		overflow: hidden;
+		
+	}
+
+	
+
+
+		.table thead {
+			background: #f1f2ff;
+			font-weight: 700;
+			color: #222 !important;
+		}
+
+	table:not(.table-dark) th {
+		color: #222 !important;
+	}
+
+
+	/* Empty state blocks */
+	#nodataBlock,
+	#exceptionNodataBlock,
+	#cardHistoryNodataBlock {
+		background: #fff;
+		border-radius: 14px;
+		box-shadow: 0 6px 18px rgba(0,0,0,.08);
+	}
+
+
+
+	.bx-dots-vertical-rounded {
+		color: #383535;
+		font-size: 22px;
+	}
+
+	.card-body {
+      color:black;
+	  font-size: 18px;
+	}
+
+
+	.table-def > :not(caption) > * > * {
+	
+		color: var(--bs-table-color-state,var(--bs-table-color-type,black));
+		
+	}
+
+	td.details-control {
+		cursor: pointer;
+		text-align: center;
+	}
+
+		td.details-control::before {
+			content: '+';
+			font-weight: bold;
+			color: #0d6efd;
+		}
+
+	tr.shown td.details-control::before {
+		content: '-';
+	}
+
+    
+	.text-lg{
+		min-width:150px;
+	}
+
+
+
+	td.details-control {
+		cursor: pointer;
+		text-align: center;
+	}
+
+		td.details-control::before {
+			content: "";
+			display: inline-block;
+			width: 24px;
+			height: 24px;
+			background-image: url('../../temp/icons/close6.png');
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: contain;
+			cursor: pointer;
+		}
+
+		td.details-control::before {
+			content: "";
+			display: inline-block;
+			width: 24px;
+			height: 24px;
+			background-image: url('../../temp/icons/close6.png');
+			background-repeat: no-repeat;
+			background-size: contain;
+		}
+
+	tr.shown td.details-control::before {
+		background-image: url('../../temp/icons/open.png');
+	}
+	.margin-left {
+	margin-right: 800px !important;
+
+	}
+
+
+	.label {
+/* 	min-width: 140px;
+ */	margin-left: 20px;
+}
+
+	.card-detail{
+		background-color: #f4f4f4
+	}
+
+	table.dataTable.table-sm > thead > tr > th:not(.sorting_disabled) {
+		
+		text-align: right;
+	}
+
+	.form-check {
+	
+		color: black;
+		font-size: larger;
+		text-align:left;
+		float: right;
+	}
+
+	
+
+	
+
+</style>
+<div class="modal fade viewDetailModal" id="viewDetailModal"
+	 data-bs-backdrop="static"
+	 data-bs-keyboard="false"
+	 tabindex="-1"
+	 aria-hidden="true">
+
+	<div class="modal-dialog modal-xl modal-dialog-centered">
+		<div class="modal-content custom-modal">
+
+			<!-- Header -->
+			<div class="modal-header">
+				<h5 class="modal-title fw-bold">تفاصيل الموظف</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<!-- Body -->
+			<div class="modal-body p-0">
+				<div class="row g-0">
+
+					<input id="employeeId" class="visually-hidden" />
+
+					<!-- Sidebar (Tabs) -->
+					<div class="col-3 sidebar">
+						<div class="list-group list-group-flush"
+							 id="list-tab"
+							 role="tablist">
+
+							<a class="list-group-item list-group-item-action active"
+							   id="profile-tab"
+							   data-bs-toggle="list"
+							   href="#profile"
+							   role="tab"
+							   aria-controls="profile"
+							   aria-selected="true">
+								البيانات الأساسية
+							</a>
+
+							<a class="list-group-item list-group-item-action"
+							   id="family-tab"
+							   data-bs-toggle="list"
+							   href="#family"
+							   role="tab"
+							   aria-controls="family"
+							   aria-selected="false">
+								أفراد العائلة
+							</a>
+
+							<a class="list-group-item list-group-item-action"
+							   id="exceptions-tab"
+							   data-bs-toggle="list"
+							   href="#exceptions"
+							   role="tab"
+							   aria-controls="exceptions"
+							   aria-selected="false">
+								الاستثناءات
+							</a>
+
+							<a class="list-group-item list-group-item-action"
+							   id="cardNoArchive-tab"
+							   data-bs-toggle="list"
+							   href="#cardNoArchive"
+							   role="tab"
+							   aria-controls="cardNoArchive"
+							   aria-selected="false">
+								أرشيف البطاقات
+							</a>
+
+							<a class="list-group-item list-group-item-action"
+							   id="others-tab"
+							   data-bs-toggle="list"
+							   href="#others"
+							   role="tab"
+							   aria-controls="others"
+							   aria-selected="false">
+								أخرى
+							</a>
+
+						</div>
+					</div>
+
+					<!-- Content -->
+					<div class="col-9 content-area">
+						<div class="tab-content p-4">
+
+							<!-- Profile -->
+							<div class="tab-pane fade show active" id="profile">
+								<h4 class="section-title">البيانات الأساسية</h4>
+
+								<div class="row g-4">
+									<div class="col-md-6">
+										<div class="info-card">
+											<label>الاسم</label>
+											<input class="form-control" disabled id="EmployeeName">
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="info-card">
+											<label>الإدارة</label>
+											<input class="form-control" disabled id="EmployeeDepartment">
+										</div>
+									</div>
+								</div>
+
+								<div class="row g-4 mt-1">
+									<div class="col-md-3">
+										<div class="info-card">
+											<label>تاريخ التعيين</label>
+											<input class="form-control" disabled id="EmployeeHireDate">
+										</div>
+									</div>
+
+									<div class="col-md-3">
+										<div class="info-card">
+											<label>تاريخ الميلاد</label>
+											<input class="form-control" disabled id="EmployeeBirthDate">
+										</div>
+									</div>
+
+									<div class="col-md-3">
+										<div class="info-card">
+											<label>النوع</label>
+											<input class="form-control" disabled id="EmployeeGender">
+										</div>
+									</div>
+
+									<div class="col-md-3">
+										<div class="info-card">
+											<label>الحالة الاجتماعية</label>
+											<input class="form-control" disabled id="EmployeeMartialStatus">
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Family -->
+							<div class="tab-pane fade" id="family">
+								<div class="row">
+									<div id="nodataBlock"
+										 class="col-12 d-flex flex-column justify-content-center align-items-center text-center"
+										 style="min-height:300px">
+										<h4 class="section-title w-100">أفراد العائلة</h4>
+										<h5 class="text-muted">لا يوجد أفراد عائلة مكفولين</h5>
+									</div>
+
+									<div id="datafoundBlock" class="col-12 visually-hidden">
+										<h4 class="section-title">أفراد العائلة</h4>
+										<table class="table table-bordered table-striped">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>الاسم</th>
+													<th>النوع</th>
+													<th>صلة القرابة</th>
+													<th>حالة الكفالة</th>
+													<th>تاريخ الميلاد</th>
+													<th>العمر</th>
+												</tr>
+											</thead>
+											<tbody id="tblFamilyMembersBody"></tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+
+							<!-- Exceptions -->
+							<div class="tab-pane fade" id="exceptions">
+								<div class="row">
+									<div id="exceptionNodataBlock"
+										 class="col-12 d-flex flex-column justify-content-center align-items-center text-center"
+										 style="min-height:300px">
+										<h4 class="section-title w-100">الاستثناءات</h4>
+										<h5 class="text-muted">لا يوجد استثناءات</h5>
+									</div>
+
+									<div id="exceptionDatafoundBlock" class="col-12 visually-hidden">
+										<h4 class="section-title">الاستثناءات</h4>
+										<table class="table table-bordered table-striped detailTable">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>الاسم</th>
+													<th>نوع الاستثناء</th>
+													<th>العام</th>
+												</tr>
+											</thead>
+											<tbody id="tblExceptionsBody"></tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+
+							<!-- Card Archive -->
+							<div class="tab-pane fade" id="cardNoArchive">
+								<div class="row">
+									<div id="cardHistoryNodataBlock"
+										 class="col-12 d-flex flex-column justify-content-center align-items-center text-center"
+										 style="min-height:300px">
+										<h4 class="section-title w-100">أرشيف البطاقات</h4>
+										<h5 class="text-muted">لا يوجد بطاقات سابقة</h5>
+									</div>
+
+									<div id="cardHistoryDatafoundBlock" class="col-12 visually-hidden">
+										<h4 class="section-title">أرشيف البطاقات</h4>
+										<table class="table table-bordered table-striped ">
+											<thead>
+												<tr class="text-dark">
+													<th>#</th>
+													<th>اسم المستفيد</th>
+													<th>رقم البطاقة</th>
+													<th>السنة</th>
+												</tr>
+											</thead>
+											<tbody id="tblCardNosHistoryBody"></tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+
+							<!-- Others -->
+							<div class="tab-pane fade" id="others">
+								<h4 class="section-title">أخرى</h4>
+								<img id="profileImage" class="img-fluid rounded shadow-sm">
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<!-- Footer -->
+			<div class="modal-footer">
+				<button class="btn btn-outline-secondary" data-bs-dismiss="modal">إغلاق</button>
+				<button class="btn btn-primary">حفظ</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<!-------*****************افراد العائلة***********************-------->
+<div class="modal fade" id="familyMemberModel" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel4">افراد العائلة</h5>
+				<button type="button"
+						class="btn-close"
+						data-bs-dismiss="modal"
+						aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table id="familyMemberTable" class="table table-sm table-dark table-bordered text-end">
+					<thead>
+						<tr>
+							<th>الرقم</th>
+							<th>الاسم </th>
+							<th>صلة القرابة </th>
+							<th>الحالة الاجتماعية </th>
+
+							<th> اعاقة </th>
+							<th> الامراض </th>
+						
+							<th>عمليات</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+					Close
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-------*****************ادارة الامراض لافراد العائلة***********************-------->
+
+<div class="modal fade" id="FamilyBeneficiaryDiseaseModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel3"> ادارة الامراض </h5>
+				<button type="button"
+						class="btn-close"
+						data-bs-dismiss="modal"
+						aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<!-- Basic Layout -->
+				<form id="formFamilyBeneficiaryDisease" name="formFamilyBeneficiaryDisease" class="needs-validation" novalidate>
+					<input id="employeeIdforFamilyMemberDisease" type="hidden" />
+					
+					<div class="row mb-3">
+						<label class="col-sm-2 col-form-label">الأمراض</label>
+						<div class="row row-cols-2 row-cols-md-4 row-cols-lg-8 g-2" style="text-align: left;" id="diseaseContainer">
+						</div>
+					</div>
+
+					<!-- الإعاقة -->
+					<div class="row mb-3">
+						<label class="col-sm-2 col-form-label">الحالة</label>
+						<div class="col-sm-10">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="isDisabledForFamily">
+								<label class="form-check-label" for="isDisabledForFamily">
+									إعاقة
+								</label>
+							</div>
+						</div>
+					</div>
+					
+
+					
+					<div class="row justify-content-end">
+						<div class="col-sm-10">
+							<button type="submit" class="btn btn-primary">تعديل</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="modal fade" id="BeneficiaryDiseaseModal"  tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel3"> ادارة الامراض </h5>
+				<button type="button"
+						class="btn-close"
+						data-bs-dismiss="modal"
+						aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="formBeneficiaryDisease" name="formBeneficiaryDisease" class="needs-validation" novalidate>
+
+					<input id="employeeIdforDisease" type="hidden" />
+
+					<!-- الأمراض -->
+					<div class="row mb-3">
+						<label class="col-sm-2 col-form-label">الأمراض</label>
+						<div class="col-sm-10">
+							<div class="row row-cols-2 row-cols-md-4 row-cols-lg-8 g-2" id="diseaseContainercheckbox">
+							</div>
+						</div>
+					</div>
+
+					<!-- الإعاقة -->
+					<div class="row mb-3">
+						<label class="col-sm-2 col-form-label">الحالة</label>
+						<div class="col-sm-10">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="isDisabled">
+								<label class="form-check-label" for="isDisabled">
+									إعاقة
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- زر -->
+					<div class="row justify-content-end">
+						<div class="col-sm-10">
+							<button type="submit" class="btn btn-primary">تعديل</button>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="modal fade" id="exampleModal" data-bs-backdrop="static"
+	 data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">خطاب الاستثناء</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+				<div id="preview" style="margin-top:10px;"></div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">خروج</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
 
 
 <div class="row">
-    <div class="col-lg-12 mb-4 order-0">
-        <div class="card">
-            <div class="card-body">
-                <h4>ادارة المكفولين</h4>
-                <p class="d-flex justify-content-between">
-                   
-
-                    <button type="button"
-                            class="btn btn-primary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#createModal">
-                        اضافة
-                    </button>
-
-                    <button type="button"
-                            onclick="GetNotGuarantee()" class="btn btn-secondary">
-                            
-                       غير المكفوليين
-                    </button>
-
-
-                </p>
-
-                <table id="myTable" class="table table-striped table-bordered table-dark" style="width:100%">
-                    <thead>
-                        <tr>
-
-                            @* "id": 1722,
-                            "name": "معتز محمد عثمان احمد",
-                            "hireDate": null,
-                            "martialStatusId": null,
-                            "departmentId": null,
-                            "genderId": null,
-                            "gender": "ذكر",
-                            "grade": "الثامنة",
-                            "department": "ادارة الهندسة الاستشارية",
-                            "employmetType": "توظيف", *@
-                            <th>الرقم</th>
-                            <th>الاسم </th>
-                            <th>رقم البطاقة </th>
-                            <th>استثناء </th>
-                            <th> تاريخ اصدار </th>
-                            <th> تاريخ انتهاء </th>
-                            <th>  ؟اعاقة </th>
-                            <th>عمليات</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-
-            </div>
-        </div>
-    </div>
+	<div class="col-lg-12 mb-4 order-0">
+		<div class="card">
+			<div class="card-body">
+				<h4>ادارة المكفولين</h4>
+			
+				<table id="myTable" class="table table-sm table-bordered table-def" @* style="width:100% ;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" *@>
+					<thead>
+						<tr>
+							<th></th> <!-- 🔥 هذا هو الحل -->
+							<th>الرقم</th>
+							<th>الاسم </th>
+							<th>النوع </th>
+							<th>الادارة</th>
+							<th>الحالة الاجتماعية </th>
+							<th>رقم البطاقة </th>
+							@* <th>استثناء </th> *@
+							<th> تاريخ اصدار </th>
+							<th> تاريخ انتهاء </th>
+							<th>  ؟اعاقة </th>
+							<th>رقم الموظف</th>
+							<th>عمليات</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+				
+			</div>
+		</div>
+	</div>
 </div>
-
-
 
 <!-- Create Modal -->
-
-
-
-
-
 <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel4">Modal title</h5>
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col mb-3">
-                        <label for="nameExLarge" class="form-label">Name</label>
-                        <input type="text" id="nameExLarge" class="form-control" placeholder="Enter Name" />
-                    </div>
-                </div>
-                <div class="row g-2">
-                    <div class="col mb-0">
-                        <label for="emailExLarge" class="form-label">Email</label>
-                        <input type="text" id="emailExLarge" class="form-control" placeholder="xxxx@xxx.xx" />
-                    </div>
-                    <div class="col mb-0">
-                        <label for="dobExLarge" class="form-label">DOB</label>
-                        <input type="text" id="dobExLarge" class="form-control" placeholder="DD / MM / YY" />
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                    Close
-                </button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel4">Modal title</h5>
+				<button type="button"
+						class="btn-close"
+						data-bs-dismiss="modal"
+						aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col mb-3">
+						<label for="nameExLarge" class="form-label">Name</label>
+						<input type="text" id="nameExLarge" class="form-control" placeholder="Enter Name" />
+					</div>
+				</div>
+				<div class="row g-2">
+					<div class="col mb-0">
+						<label for="emailExLarge" class="form-label">Email</label>
+						<input type="text" id="emailExLarge" class="form-control" placeholder="xxxx@xxx.xx" />
+					</div>
+					<div class="col mb-0">
+						<label for="dobExLarge" class="form-label">DOB</label>
+						<input type="text" id="dobExLarge" class="form-control" placeholder="DD / MM / YY" />
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+					Close
+				</button>
+				<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
+		</div>
+	</div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- Update Modal -->
 <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
-        <form id="updateForm" class="needs-validation" novalidate>
-            <div class="modal-content">
-                <div class="modal-header">
-                    <input type="hidden" id="edit_id" />
-                    <h5 class="modal-title">تعديل الاستثناء</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label for="edit_name" class="form-label">السنة</label>
-                            <input type="text" id="edit_name" class="form-control" placeholder="مثلاً: 2026"
-                                   required />
-                            <div class="invalid-feedback">
-                                الرجاء إدخال اسم الاستثناء
+	<div class="modal-dialog modal-sm" role="document">
+		<form id="updateForm" class="needs-validation" novalidate>
+			<div class="modal-content">
+				<div class="modal-header">
+					<input type="hidden" id="edit_id" />
+					<h5 class="modal-title">تعديل الاستثناء</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col mb-3">
+							<label for="edit_name" class="form-label">السنة</label>
+							<input type="text" id="edit_name" class="form-control" placeholder="مثلاً: 2026"
+								   required />
+							<div class="invalid-feedback">
+								الرجاء إدخال اسم الاستثناء
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary"> تعديل </button>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
-                </div>
-            </div>
-        </form>
-    </div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary"> تعديل </button>
+					<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
+				</div>
+			</div>
+		</form>
+	</div>
 </div>
-
-
-
-
-
-
-
 
 <div class="bs-toast toast toast-placement-ex m-2 fade bg-success top-0 end-0"
-     id="successToast"
-     role="alert"
-     aria-live="assertive"
-     aria-atomic="true"
-     data-bs-delay="3000">
-    <div class="toast-header">
-        <i class="bx bx-bell me-2"></i>
-        <div class="me-auto fw-semibold">إشعار النجاح</div>
-        <small>الآن</small>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-    <div class="toast-body" id="successToastBody">
-        تمت إضافة السنة بنجاح!
-    </div>
+	 id="successToast"
+	 role="alert"
+	 aria-live="assertive"
+	 aria-atomic="true"
+	 data-bs-delay="3000">
+	<div class="toast-header">
+		<i class="bx bx-bell me-2"></i>
+		<div class="me-auto fw-semibold">إشعار النجاح</div>
+		<small>الآن</small>
+		<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+	</div>
+	<div class="toast-body" id="successToastBody">
+		تمت إضافة السنة بنجاح!
+	</div>
 </div>
+
+
+
+
+
+<div class="bs-toast toast toast-placement-ex m-2 fade top-0 end-0"
+	 id="mainToast"
+	 role="alert"
+	 aria-live="assertive"
+	 aria-atomic="true"
+	 data-bs-delay="3000">
+
+	<div class="toast-header">
+		<i class="bx me-2" id="toastIcon"></i>
+		<div class="me-auto fw-semibold" id="toastTitle"></div>
+		<small>الآن</small>
+		<button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+	</div>
+
+	<div class="toast-body" id="toastBody"></div>
+</div>
+
+
+
+
+
+
 
 
 @section Scripts {
-    <script>
-        $(document).ready(function () {
-            // قراءة الرابط من الـ ViewBag وتخزينه في متغير جافاسكريبت
-            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
-
-                  $('#myTable').DataTable({
-            "ajax": {
-                 "url": apiBaseUrl + "api/Beneficiary",
-                "type": "GET",
-                "dataSrc": "data"
-            },
-            "columns": [
-                  {
-            "data": "id",
-            "width": "20px",        // تحديد العرض المطلوب
-            "className": "dt-center" // اختياري: لتوسيط المحتوى داخل العمود
-        },
-       { "data": "name" },
-           { "data": "cardNo" },
-              { "data": "exceptionTypeName" },
-
-                { "data": "cardIssueDate" },
-                  { "data": "cardEndDate" },
-                 {
-                        "data": "hasDisability", "width": "50px", "render": function (data) {
-                                       var cssClass,clientType;
-                                       if (data === null || data ===false)
-                                       {
-                                           cssClass = "bg-success";
-                                           clientType = "لا";
-                                       }else
-                                       {
-                                            clientType = "نعم";
-                                           cssClass = "bg-warning";
-                                       }
-
-
-                                       return '<span class="badge ' + cssClass + '">' + clientType + '</span>'
-
-                                   }
-                               },
-
-
-
+	<script>
+
+		 $(document).ready(function () {
+			 // قراءة الرابط من الـ ViewBag وتخزينه في متغير جافاسكريبت
+			 var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+			 var HrAPIUrl = "@ViewBag.HrAPIUrl";
+			 var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
+			
+
+	      
+		
+			 var form = document.getElementById('addForm');
+
+
+
+
+
+				   var dataTable;
+
+		$(document).ready(function () {
+
+			dataTable = $('#myTable').DataTable({
+				processing: true,
+				ajax: {
+					url: apiBaseUrl + "api/Beneficiary/GetBeneficiaryFullDataHR",
+					type: "GET",
+					dataSrc: "data"
+				},
+				columns: [
+
+					// 🔽 عمود التفاصيل
+					{
+						className: 'details-control',
+						orderable: false,
+						data: null,
+						defaultContent: '',
+						width: "20px"
+					},
+
+					{ data: "id", width: "20px", className: "dt-center" },
+
+					{ data: "name" },
+
+					{
+						data: "genderName",
+						width: "65px",
+						render: function (data) {
+							const text = data ?? "أنثي";
+							const cssClass = text === "أنثي" ? "bg-warning" : "bg-info";
+							return `<span class="badge ${cssClass}">${text}</span>`;
+						}
+					},
+
+					{ data: "departmentName" },
+
+					{ data: "martialStatusName" },
+
+					{ data: "cardNo" },
+
+					{ data: "cardIssueDate" },
+
+					{ data: "cardEndDate" },
+
+					{
+						data: "hasDisability",
+						width: "50px",
+						render: function (data) {
+							let text = data ? "نعم" : "لا";
+							let css = data ? "bg-warning" : "bg-success";
+							return `<span class="badge ${css}">${text}</span>`;
+						}
+					},
+
+					{
+						data: "clientId",
+						visible: false
+					},
+
+					{
+						data: null,
+						orderable: false,
+						width: "30px",
+						className: "text-center",
+						render: function (data, type, row) {
+							return `
+							<div class="dropdown">
+								<button class="btn p-0" data-bs-toggle="dropdown">
+									<i class="bx bx-dots-vertical-rounded"></i>
+								</button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" onclick="manageDisease(${row.id}, '${row.name}')">
+										الامراض
+									</a>
+									<a class="dropdown-item" onclick="viewDetails(${row.clientId})">
+										تفاصيل
+									</a>
+									<a class="dropdown-item text-danger" onclick="deleteYear(${row.id})">
+										حذف
+									</a>
+								</div>
+							</div>`;
+						}
+					}
+				],
+
+				language: {
+					processing: "جارٍ التحميل...",
+					lengthMenu: "أظهر _MENU_ مدخلات",
+					zeroRecords: "لا توجد بيانات",
+					info: "إظهار _START_ إلى _END_ من أصل _TOTAL_",
+					infoEmpty: "لا توجد بيانات",
+					search: "بحث:",
+					paginate: {
+						first: "الأول",
+						previous: "السابق",
+						next: "التالي",
+						last: "الأخير"
+					}
+				},
+
+				dom: '<"top"l>rt<"bottom"ip><"clear">',
+
+				initComplete: function (settings, json) {
+					addSearchControl(json);
+				}
+			});
+
+			// 🔽 حدث فتح/إغلاق التفاصيل
+			$('#myTable tbody').on('click', 'td.details-control', function () {
+
+				var tr = $(this).closest('tr');
+				var row = dataTable.row(tr);
+
+				if (row.child.isShown()) {
+					row.child.hide();
+					tr.removeClass('shown');
+				} else {
+					row.child(format(row.data())).show();
+					tr.addClass('shown');
+				}
+			});
+
+
+             function addSearchControl(json) 	{
+
+			// استنساخ الصف
+			$('#myTable thead tr').clone(true).appendTo('#myTable thead');
+
+				// 🔥 منع الترتيب عند الضغط على صف الفلاتر
+		$('#myTable thead tr:eq(1) th').off('click');
+
+
+			$('#myTable thead tr:eq(1) th').each(function (index) {
+
+				// ❌ إزالة أسهم الترتيب من صف الفلاتر
+				$(this).removeClass('sorting sorting_asc sorting_desc');
+
+				// أعمدة بدون بحث
+				if ([0, 1, 6, 7, 8, 9, 10, 11].includes(index)) {
+					$(this).html('');
+					return;
+				}
+
+				/* 🔽 الحالة الاجتماعية (كان 4 أصبح 5) */
+				if (index === 5) {
+
+					let select = $('<select class="form-select form-select-sm"><option value="">الكل</option></select>');
+					let values = [];
+
+					$.each(json.data, function (i, item) {
+						if (item.martialStatusName && !values.includes(item.martialStatusName)) {
+							values.push(item.martialStatusName);
+							select.append(
+								$('<option/>')
+									.val(item.martialStatusName)
+									.text(item.martialStatusName)
+							);
+						}
+					});
 
-
-          
-
-
-
-
-
-
-                {
-                    "data": null,
-                    "orderable": false,
-                    "width": "30px", // تحديد العرض هنا لضمان التطبيق
-                    "className": "text-center", // اختياري: لتوسط الأيقونة في العمود
-                    "render": function (data, type, row) {
-                        return `
-                            <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="javascript:void(0);" onclick="manageDisease(${row.id})">
-                                        <i class="bx bx-edit-alt me-1"></i> الامراض
-                                    </a>
-                                    <a class="dropdown-item" href="javascript:void(0);" onclick="viewDetails(${row.id})">
-                                        <i class="bx bx-show-alt me-1"></i> تفاصيل
-                                    </a>
-                                    <a class="dropdown-item text-danger" href="javascript:void(0);" onclick="deleteYear(${row.id})">
-                                        <i class="bx bx-trash me-1"></i> حذف
-                                    </a>
-                                </div>
-                            </div>
-                        `;
-                    }
-                }
-            ],
-            "language": {
-                "search": "بحث:",
-                "paginate": {
-                    "next": "التالي",
-                    "previous": "السابق"
-                }
-                // ... بقية الترجمة
-            },
-            // تفعيل خاصية التحديد التلقائي للعرض
-            "autoWidth": false
-        });
-
-
-         var apiBaseUrl = "@ViewBag.ApiBaseUrl";
-        var form = document.getElementById('addForm');
-
-
-
-
-        $('#addForm').on('submit', function (e) {
-            e.preventDefault();
-
-            if (!form.checkValidity()) {
-                e.stopPropagation();
-                $(form).addClass('was-validated');
-                return;
-            }
+					$(this).html(select);
 
-            var value = $('#name').val().trim();
-            var data = { name: value };
+					$('select', this).on('change', function () {
+						let val = $(this).val();
+						dataTable
+							.column(index)
+							.search(val ? '^' + val + '$' : '', true, false)
+							.draw();
+					});
 
-            $.ajax({
-                url: apiBaseUrl + "api/ExceptionType",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(data),
-                success: function (response) {
-                    // إغلاق المودال وتفريغ الحقول
-                    $('#createModal').modal('hide');
-                    form.reset();
-                    $(form).removeClass('was-validated');
-
-                    // تحديث الجدول
-                    $('#myTable').DataTable().ajax.reload();
-
-                     // تعريف الـ Toast باستخدام Bootstrap المدمج في القالب
-
-
-
-                      showToast("تمت إضافة استثناء " + yearValue + " بنجاح");
-
-                },
-                error: function (xhr) {
-                    var errorMsg = xhr.responseJSON ? xhr.responseJSON.message : "خطأ في الاتصال";
-
-
-                     showToast(errorMsg,true);
-                }
-            });
-        });
-
-        });
-
-
-          function deleteYear(id) {
-           var apiBaseUrl = "@ViewBag.ApiBaseUrl";
-             // تعريف الـ Toast باستخدام Bootstrap المدمج في القالب
-             var toastElement = document.getElementById('successToast');
-             var toast = new bootstrap.Toast(toastElement);
-            Swal.fire({
-                title: 'هل أنت متأكد؟',
-                text: "لن تتمكن من التراجع عن هذا الحذف!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#696cff',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'نعم، احذفها!',
-                cancelButtonText: 'إلغاء'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // هنا تضع طلب الـ AJAX للحذف
-                    $.ajax({
-                        url: apiBaseUrl + "api/ExceptionType/" + id,
-                        type: "DELETE",
-                        success: function (response) {
-                      $('#myTable').DataTable().ajax.reload();
-
-
-                     showToast("تمت حذف  بنجاح");
-
-                        },
-                error: function (xhr) {
-                    var errorMsg = xhr.responseJSON ? xhr.responseJSON.message : "خطأ";
-
-                    // عرض Toast أحمر في حالة الخطأ
-
-                    showToast(errorMsg,true);
-                }
-                    });
-                }
-            });
-        }
-
-
-
-          function showToast(message, isError = false) {
-            const toastElement = $('#successToast');
-            const toastBody = $('#successToastBody');
-
-            // تغيير الرسالة
-            toastBody.text(message);
-
-            // تغيير اللون إذا كان خطأ (اختياري)
-            if (isError) {
-                toastElement.removeClass('bg-success').addClass('bg-danger');
-            } else {
-                toastElement.removeClass('bg-danger').addClass('bg-success');
-            }
-
-            // تشغيل التوست باستخدام Bootstrap 5 API
-            const toast = new bootstrap.Toast(toastElement[0]);
-            toast.show();
-        }
-
-
-            function manageDisease(id) {
-            // بناء الرابط مع إضافة معرف المستفيد بشكل صحيح
-            var url = "/BeneficiaryDisease/BeneficiaryDisease/" + id;
-
-            // التوجيه إلى الرابط المطلوب
-            window.location.href = url;
-        }
-          function GetNotGuarantee() {
-            // بناء الرابط مع إضافة معرف المستفيد بشكل صحيح
-            var url = "Beneficiary/NotGuarantee";
-
-            // التوجيه إلى الرابط المطلوب
-            window.location.href = url;
-        }
-        
-
-            function editYear(id)
-            {
-             var apiBaseUrl = "@ViewBag.ApiBaseUrl";
-             /// تحميل
-
-            Swal.fire({
-                title: 'جاري جلب البيانات...',
-                allowOutsideClick: false,
-                didOpen: () => { Swal.showLoading(); }
-            });
-
-            $.ajax({
-                url: apiBaseUrl + "api/ExceptionType/" + id,
-                type: "GET",
-                success: function (response) {
-                    Swal.close(); // إغلاق رسالة التحميل
-
-
-                    if (response.status === "Success") {
-                        $('#edit_id').val(response.data.id);
-                        $('#edit_name').val(response.data.name);
-                        //---------اكتب بي كود التعديل هنا بناء علي Api-------
-                          $('#updateForm').on('submit', function (e) {
-              e.preventDefault();
-
-            if (!this.checkValidity()) {
-                $(this).addClass('was-validated');
-                return;
-            }
-
-            const yearId = $('#edit_id').val();
-            const dataToUpdate = {
-                id: parseInt(yearId),
-                name: $('#edit_name').val()
-            };
-
-            // إظهار سبينر التحميل في SweetAlert (فقط أثناء الانتظار)
-            Swal.fire({
-                title: 'جاري الحفظ...',
-                didOpen: () => { Swal.showLoading(); },
-                allowOutsideClick: false
-            });
-
-            $.ajax({
-                url: apiBaseUrl + "api/ExceptionType",
-                type: "PUT",
-                contentType: "application/json",
-                data: JSON.stringify(dataToUpdate),
-                success: function (response) {
-                    Swal.close(); // إغلاق سبينر التحميل
-                    $('#updateModal').modal('hide');
-                    $('#myTable').DataTable().ajax.reload();
-
-                    // استدعاء التوست الخاص بك
-                    showToast("تم تعديل  بنجاح!");
-                },
-                error: function (xhr) {
-                    Swal.close();
-                    // إظهار توست خطأ
-                    showToast("حدث خطأ أثناء التعديل", true);
-                }
-            });
-        });
-
-
-                        $('#updateModal').modal('show');
-                    }
-                },
-                error: function (xhr) {
-                    Swal.fire('خطأ!', 'تعذر جلب بيانات السنة', 'error');
-                }
-
-            });
-
-
-        
-        }
-
-    </script>
+					return;
+				}
+
+				/* 🔽 الادارة (كان 3 أصبح 4) */
+				if (index === 4) {
+
+					let select = $('<select class="form-select form-select-sm"><option value="">الكل</option></select>');
+					let values = [];
+
+					$.each(json.data, function (i, item) {
+						if (item.departmentName && !values.includes(item.departmentName)) {
+							values.push(item.departmentName);
+							select.append(
+								$('<option/>')
+									.val(item.departmentName)
+									.text(item.departmentName)
+							);
+						}
+					});
+
+					$(this).html(select);
+
+					$('select', this).on('change', function () {
+						let val = $(this).val();
+						dataTable
+							.column(index)
+							.search(val ? '^' + val + '$' : '', true, false)
+							.draw();
+					});
+
+					return;
+				}
+
+				/* 🔽 النوع (كان 2 أصبح 3) */
+				if (index === 3) {
+
+					let select = $('<select class="form-select form-select-sm"><option value="">الكل</option></select>');
+					let values = [];
+
+					$.each(json.data, function (i, item) {
+						if (item.genderName && !values.includes(item.genderName)) {
+							values.push(item.genderName);
+							select.append(
+								$('<option/>')
+									.val(item.genderName)
+									.text(item.genderName)
+							);
+						}
+					});
+
+					$(this).html(select);
+
+					$('select', this).on('change', function () {
+						let val = $(this).val();
+						dataTable
+							.column(index)
+							.search(val ? '^' + val + '$' : '', true, false)
+							.draw();
+					});
+
+					return;
+				}
+
+				/* 🔍 INPUT لبقية الأعمدة */
+				$(this).html('<input type="text" class="form-control text-lg form-control-sm" placeholder="بحث" />');
+
+				$('input', this).on('keyup change', function () {
+					dataTable.column(index).search(this.value).draw();
+				});
+
+			});
+		}
+
+
+
+
+
+
+
+
+
+
+		});
+
+
+		// 🔽 تصميم التفاصيل
+				function format(row) {
+			return `
+				<div class="card card-detail border-0 shadow-sm rounded-3 overflow-hidden">
+
+					<div class="p-3 text-dark fw-bold small">
+
+						<div class="row g-2">
+
+							<div class="col-6 d-flex">
+								<span class="label">الاسم:</span>
+								<span>${row.name ?? '-'}</span>
+							</div>
+
+							<div class="col-6 d-flex">
+								<span class="label">الإدارة:</span>
+								<span>${row.departmentName ?? '-'}</span>
+							</div>
+
+							<div class="col-6 d-flex">
+								<span class="label">الحالة:</span>
+								<span>${row.martialStatusName ?? '-'}</span>
+							</div>
+
+							<div class="col-6 d-flex">
+								<span class="label">رقم البطاقة:</span>
+								<span>${row.cardNo ?? '-'}</span>
+							</div>
+
+							<div class="col-6 d-flex">
+								<span class="label">تاريخ الإصدار:</span>
+								<span>${row.cardIssueDate ?? '-'}</span>
+							</div>
+
+							<div class="col-6 d-flex">
+								<span class="label">تاريخ الانتهاء:</span>
+								<span>${row.cardEndDate ?? '-'}</span>
+							</div>
+
+						</div>
+
+					</div>
+
+					<hr class="m-0">
+
+					<!-- الأزرار -->
+					<div class="d-flex align-items-center p-2">
+
+						<div class="d-flex gap-2">
+							
+
+								<button class="btn btn-sm btn-primary" onclick="viewFamily(${row.clientId})" title="عائلة الموظف">
+												<i class="bx bx-man-woman"></i>
+							</button>
+
+								  <button class="btn btn-sm btn-success border" onclick="BeneficiaryDiseaseCheckbox(${row.id})" title="امراض الموظف">
+									  <i class="bx bx-virus"></i>
+							</button>
+
+								<button class="btn btn-sm btn-light border" onclick="viewDetails(${row.clientId})" title="تفاصيل">
+									<i class="bx bx-show"></i>
+								</button>
+						</div>
+
+						<button class="btn btn-sm btn-danger ms-auto" onclick="deleteClient(${row.clientId})" title="حذف">
+							<i class="bx bx-trash"></i>
+						</button>
+
+					</div>
+
+				</div>
+			`;
+		}
+
+
+
+
+
+
+				
+
+
+
+
+
+
+
+
+
+
+		 $('#addForm').on('submit', function (e) {
+			 e.preventDefault();
+
+			 if (!form.checkValidity()) {
+				 e.stopPropagation();
+				 $(form).addClass('was-validated');
+				 return;
+			 }
+
+			 var value = $('#name').val().trim();
+			 var data = { name: value };
+
+			 $.ajax({
+				 url: apiBaseUrl + "api/ExceptionType",
+				 type: "POST",
+				 contentType: "application/json",
+				 data: JSON.stringify(data),
+				 success: function (response) {
+					 // إغلاق المودال وتفريغ الحقول
+					 $('#createModal').modal('hide');
+					 form.reset();
+					 $(form).removeClass('was-validated');
+
+					 // تحديث الجدول
+					 $('#myTable').DataTable().ajax.reload();
+
+					  // تعريف الـ Toast باستخدام Bootstrap المدمج في القالب
+
+					   showToast("تمت إضافة استثناء " + yearValue + " بنجاح");
+				 },
+				 error: function (xhr) {
+					 var errorMsg = xhr.responseJSON ? xhr.responseJSON.message : "خطأ في الاتصال";
+					  showToast(errorMsg,true);
+				 }
+			 });
+		 });
+	});
+
+		   function showToast(message, isError = false) {
+			 const toastElement = $('#successToast');
+			 const toastBody = $('#successToastBody');
+
+			 // تغيير الرسالة
+			 toastBody.text(message);
+
+			 // تغيير اللون إذا كان خطأ (اختياري)
+			 if (isError) {
+				 toastElement.removeClass('bg-success').addClass('bg-danger');
+			 } else {
+				 toastElement.removeClass('bg-danger').addClass('bg-success');
+			 }
+
+			 // تشغيل التوست باستخدام Bootstrap 5 API
+			 const toast = new bootstrap.Toast(toastElement[0]);
+			 toast.show();
+		 }
+
+			 function manageDisease(id, name) 
+			 {
+				 // بناء الرابط مع إضافة معرف المستفيد بشكل صحيح
+				var url = "/BeneficiaryDisease/BeneficiaryDisease/" + id + "?name=" + name;
+
+				 // التوجيه إلى الرابط المطلوب
+				 window.location.href = url;
+			}
+
+			    function viewDetails(id)
+				 {
+				   $("#employeeId").val(id);
+				   $('#viewDetailModal').modal('show');
+				
+
+			    	getProfileData(id);
+				}
+
+
+
+					 function getProfileData(id) {
+
+			var HrAPIUrl = "@ViewBag.HrAPIUrl";
+			var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
+			var employeeId = id;
+
+			/* =========================
+			   البيانات الأساسية
+			========================== */
+			$.get(`${HrAPIUrl}api/Employees/${employeeId}`, function (response) {
+
+				var data = response.data;
+
+				$('#EmployeeName').val(data.name ?? '');
+				$('#EmployeeDepartment').val(data.departmentName ?? '');
+				$('#EmployeeGender').val(data.genderName ?? '');
+				$('#EmployeeHireDate').val(data.hireDate ?? '');
+				$('#EmployeeBirthDate').val(data.birthDate ?? '');
+				$('#EmployeeMartialStatus').val(data.martialStatusName ?? '');
+			});
+
+
+			/* =========================
+			   أفراد العائلة
+			========================== */
+			$.get(`${ApiBaseUrl}api/Beneficiary/CompareBeneficiary/${employeeId}`, function (response) {
+
+				var data = response.data;
+				$('#tblFamilyMembersBody').empty();
+
+				if (data.familyMembers && data.familyMembers.length > 0) {
+
+					$('#nodataBlock').addClass('visually-hidden');
+					$('#datafoundBlock').removeClass('visually-hidden');
+
+					data.familyMembers.forEach(function (member) {
+
+						var row = `
+							<tr>
+								<td>${member.id ?? ''}</td>
+								<td>${member.name ?? ''}</td>
+								<td>${member.genderName ?? ''}</td>
+								<td>${member.relativeRelationName ?? ''}</td>
+								<td>
+									${member.isConsumed
+										? '<span class="badge bg-success fs-6">مكفول</span>'
+										: '<span class="badge bg-danger fs-6">غير مكفول</span>'}
+								</td>
+								<td>${member.birthDate ?? ''}</td>
+									<td>${member.currentAge ?? ''}</td>
+							</tr>
+						`;
+						$('#tblFamilyMembersBody').append(row);
+					});
+
+				} else {
+					$('#nodataBlock').removeClass('visually-hidden');
+					$('#datafoundBlock').addClass('visually-hidden');
+				}
+			});
+
+
+			/* =========================
+			   الاستثناءات
+			========================== */
+			$.get(`${ApiBaseUrl}api/Beneficiary/GetBeneficiaryExceptions/${employeeId}`, function (response) {
+
+				var data = response.data;
+				$('#tblExceptionsBody').empty();
+
+				if (data && data.length > 0) {
+
+					$('#exceptionNodataBlock').addClass('visually-hidden');
+					$('#exceptionDatafoundBlock').removeClass('visually-hidden');
+
+					data.forEach(function (member) {
+
+						var row = `
+							<tr>
+								<td>${member.id ?? ''}</td>
+								<td>${member.name ?? ''}</td>
+								<td>${member.exceptionTypeName ?? ''}</td>
+								<td>${member.yearName ?? ''}</td>
+								<td>
+									<button type="button"
+										class="btn btn-primary btn-sm"
+										onclick="openSecondModal('${member.exceptionReportPath}')">
+										عرض الخطاب
+									</button>
+								</td>
+							</tr>
+						`;
+						$('#tblExceptionsBody').append(row);
+					});
+
+				} else {
+					$('#exceptionNodataBlock').removeClass('visually-hidden');
+					$('#exceptionDatafoundBlock').addClass('visually-hidden');
+				}
+			});
+
+
+			/* =========================
+			   أرشيف البطاقات
+			========================== */
+			$.get(`${ApiBaseUrl}api/Beneficiary/CardNosHistory/${employeeId}`, function (response) {
+
+				var data = response.data;
+				$('#tblCardNosHistoryBody').empty();
+
+				if (data && data.length > 0) {
+
+					$('#cardHistoryNodataBlock').addClass('visually-hidden');
+					$('#cardHistoryDatafoundBlock').removeClass('visually-hidden');
+
+					data.forEach(function (card) {
+
+						var row = `
+							<tr>
+								<td>${card.id ?? ''}</td>
+								<td>${card.clientName ?? ''}</td>
+								<td>${card.cardNo ?? ''}</td>
+								<td>${card.yearName ?? ''}</td>
+							</tr>
+						`;
+						$('#tblCardNosHistoryBody').append(row);
+					});
+
+				} else {
+					$('#cardHistoryNodataBlock').removeClass('visually-hidden');
+					$('#cardHistoryDatafoundBlock').addClass('visually-hidden');
+				}
+			});
+		}
+
+
+
+
+		function openSecondModal(filePath) {
+		
+			previewFile(filePath);
+
+			$('#exampleModal').modal('show');
+		}
+
+
+
+
+			  function previewFile(url){
+			    var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
+				var filePath = `${ApiBaseUrl}${url}`;
+				const previewDiv = document.getElementById('preview');
+				previewDiv.innerHTML = ''; // مسح القديم
+				console.log(filePath);
+
+				// تحديد نوع الملف من الامتداد
+				if(!filePath)
+				{
+					previewDiv.innerHTML = 'نوع الملف غير مدعوم';
+					previewDiv.style.color = 'red';
+					previewDiv.style.fontSize = '22px';
+					return;
+				}
+				const ext = filePath.split('.').pop().toLowerCase();
+
+				if(['jpg','jpeg','png','gif','bmp'].includes(ext)) {
+					const img = document.createElement('img');
+					img.src = filePath;
+					img.style.maxWidth = '100%';
+					img.style.height = 'auto';
+					previewDiv.appendChild(img);
+				}
+				else if(ext === 'pdf') {
+					const iframe = document.createElement('iframe');
+					iframe.src = filePath + '#toolbar=0&navpanes=0&scrollbar=0';
+					iframe.style.width = '100%';
+					iframe.style.height = '500px';
+					iframe.style.border = 'none';
+					previewDiv.appendChild(iframe);
+				}
+				else {
+					previewDiv.innerHTML = 'نوع الملف غير مدعوم';
+					previewDiv.style.color = 'red';
+					previewDiv.style.fontSize = '22px';
+				}
+			}
+
+
+
+				  //  عرض بيانات العائلة
+
+				   function viewFamily(EmployeeId)
+  {
+					var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+					// 1. تدمير الجدول القديم إذا كان موجوداً لتجنب خطأ Re-initialization
+					if ($.fn.DataTable.isDataTable('#familyMemberTable')) {
+						$('#familyMemberTable').DataTable().destroy();
+						$('#familyMemberTable tbody').empty(); // تنظيف محتوى الجدول تماماً
+					}
+
+					// 2. بناء الجدول باستخدام الربط الجديد
+					var table = $('#familyMemberTable').DataTable(
+						{
+								 "ajax": {
+			"url": apiBaseUrl + "api/Report/GetBeneficiaryBaise",
+			"type": "GET",
+			"data": function (d) {
+				d.BeneficiaryId = EmployeeId;
+			},
+			"dataSrc": "data"
+		},
+						"columns": [
+							{ "data": "id", "width": "20px", "className": "dt-center" },
+							{ "data": "name" },
+						    { "data": "relativeRelationName" },
+						    { "data": "martialStatusName" },
+									{
+			"data": "hasDisability",
+			"className": "dt-center",
+			"render": function (data, type, row) {
+
+				if (data === true) {
+					return `<i class="bx bx-check-circle text-success" style="font-size:20px;"></i>`;
+				} else {
+					return `<i class="bx bx-x-circle text-danger" style="font-size:20px;"></i>`;
+				}
+			}
+		},
+								  
+												{ "data": "diseases" },
+									{
+			"data": null,
+			"orderable": false,
+			"render": function (data, type, row) {
+				return `
+					<div class="d-flex justify-content-center gap-2">
+						<button type="button" class="btn btn-sm btn-success"
+									onclick="FamilyMemberBeneficiaryDisease(${row.id})"
+								title="إضافة">
+								  <i class="bx bx-virus"></i>
+						</button>
+					</div>
+				`;
+			}
+		}
+						],
+
+
+				// // "rowCallback": function (row, data) {
+				// // 	if (data.isConsumed === true) {
+				// // 		$(row).addClass("table-warning"); // أو css مباشرة
+				// // 	}
+				// // },
+						"language": {
+							"search": "بحث:",
+							"paginate": { "next": "التالي", "previous": "السابق" }
+						},
+						"autoWidth": false
+					});
+
+
+					$('#familyMemberModel').modal('show');
+					$('#familyMemberModel').on('shown.bs.modal', function () {
+						table.columns.adjust();
+					});
+				}
+
+
+
+
+
+						function FamilyMemberBeneficiaryDisease(employeeId) {
+
+			var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+			$("#employeeIdforFamilyMemberDisease").val(employeeId);
+
+			$('#FamilyBeneficiaryDiseaseModal').modal('show');
+
+			Swal.fire({
+				target: '#FamilyBeneficiaryDiseaseModal',
+				title: 'جاري جلب البيانات...',
+				allowOutsideClick: false,
+				didOpen: () => Swal.showLoading()
+			});
+
+			$.when(
+				// 1️⃣ كل الأمراض
+				$.ajax({
+					url: `${apiBaseUrl}api/Disease`,
+					type: "GET"
+				}),
+
+				// 2️⃣ أمراض المستفيد
+				$.ajax({
+					url: `${apiBaseUrl}api/Disease/DiseasesByBeneficiaryId?Id=${employeeId}`,
+					type: "GET"
+				}),
+
+				// 3️⃣ بيانات المستفيد (🔥 الجديد)
+				$.ajax({
+					url: `${apiBaseUrl}api/Beneficiary/${employeeId}`,
+					type: "GET"
+				})
+
+			).done(function (allDiseasesRes, employeeDiseasesRes, beneficiaryRes) {
+
+				Swal.close();
+
+				const allDiseases = allDiseasesRes[0]?.data || [];
+				const employeeDiseases = employeeDiseasesRes[0]?.data || [];
+				const beneficiaryData = beneficiaryRes[0]?.data || {};
+
+				let html = '';
+
+				// ✅ عرض الأمراض
+				allDiseases.forEach(disease => {
+
+					let isChecked = employeeDiseases.some(x =>
+						String(x.id).trim() === String(disease.id).trim()
+					);
+
+					html += `
+						<div class="col">
+							<div class="form-check">
+								<input class="form-check-input disease-checkbox"
+									   type="checkbox"
+									   value="${disease.id}"
+									   id="disease_${disease.id}"
+									   ${isChecked ? 'checked' : ''}>
+
+								<label class="form-check-label small" for="disease_${disease.id}">
+									${disease.name ?? 'غير معروف'}
+								</label>
+							</div>
+						</div>
+					`;
+				});
+
+				$('#diseaseContainer').html(html);
+
+				// ✅ ضبط Checkbox الإعاقة
+				$('#isDisabledForFamily').prop('checked', beneficiaryData.hasDisability === true);
+
+			}).fail(function (err) {
+
+				Swal.close();
+				console.log(err);
+				Swal.fire('خطأ', 'فشل تحميل البيانات', 'error');
+			});
+		}
+
+
+
+
+
+
+					  function BeneficiaryDiseaseCheckbox(employeeId) {
+
+			var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+			$("#employeeIdforDisease").val(employeeId);
+
+			$('#BeneficiaryDiseaseModal').modal('show');
+
+			Swal.fire({
+				target: '#BeneficiaryDiseaseModal',
+				title: 'جاري جلب البيانات...',
+				allowOutsideClick: false,
+				didOpen: () => Swal.showLoading()
+			});
+
+			$.when(
+				// 1️⃣ كل الأمراض
+				$.ajax({
+					url: `${apiBaseUrl}api/Disease`,
+					type: "GET"
+				}),
+
+				// 2️⃣ أمراض المستفيد
+				$.ajax({
+					url: `${apiBaseUrl}api/Disease/DiseasesByBeneficiaryId?Id=${employeeId}`,
+					type: "GET"
+				}),
+
+				// 3️⃣ بيانات المستفيد (🔥 الجديد)
+				$.ajax({
+					url: `${apiBaseUrl}api/Beneficiary/${employeeId}`,
+					type: "GET"
+				})
+
+			).done(function (allDiseasesRes, employeeDiseasesRes, beneficiaryRes) {
+
+				Swal.close();
+
+				const allDiseases = allDiseasesRes[0]?.data || [];
+				const employeeDiseases = employeeDiseasesRes[0]?.data || [];
+				const beneficiaryData = beneficiaryRes[0]?.data || {};
+
+				let html = '';
+
+				// ✅ عرض الأمراض
+				allDiseases.forEach(disease => {
+
+					let isChecked = employeeDiseases.some(x =>
+						String(x.id).trim() === String(disease.id).trim()
+					);
+
+					html += `
+						<div class="col">
+							<div class="form-check">
+								<input class="form-check-input disease-checkbox"
+									   type="checkbox"
+									   value="${disease.id}"
+									   id="disease_${disease.id}"
+									   ${isChecked ? 'checked' : ''}>
+
+								<label class="form-check-label small" for="disease_${disease.id}">
+									${disease.name ?? 'غير معروف'}
+								</label>
+							</div>
+						</div>
+					`;
+				});
+
+				$('#diseaseContainercheckbox').html(html);
+
+				// ✅ ضبط Checkbox الإعاقة
+				$('#isDisabled').prop('checked', beneficiaryData.hasDisability === true);
+
+			}).fail(function (err) {
+
+				Swal.close();
+				console.log(err);
+				Swal.fire('خطأ', 'فشل تحميل البيانات', 'error');
+			});
+		}
+
+
+
+
+
+
+
+
+
+
+
+		   $('#formFamilyBeneficiaryDisease').on('submit', function (e) {
+			e.preventDefault();
+
+			saveBeneficiaryDiseases();
+		});
+
+
+						function saveBeneficiaryDiseases() {
+
+			var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+			var beneficiaryId = $('#employeeIdforFamilyMemberDisease').val();
+
+			let selectedDiseases = [];
+
+			// ✅ نجيب فقط Checkboxes الخاصة بالأمراض داخل الكونتينر
+			$('#diseaseContainer .form-check-input:checked').each(function () {
+
+				selectedDiseases.push({
+					beneficiaryId: beneficiaryId,
+					diseaseId: Number($(this).val()),
+					isActive: true
+				});
+			});
+
+			// ✅ نجيب حالة الإعاقة
+			let hasdisability = $('#isDisabledForFamily').is(':checked');
+
+			// 🔄 Loading
+			showToast("جاري الحفظ", "يرجى الانتظار...", "info");
+
+			$.ajax({
+				url: `${apiBaseUrl}api/BeneficiaryDisease/CreateBeneficiaryDiseaseList`,
+				type: "POST",
+				contentType: "application/json",
+
+				data: JSON.stringify({
+					models: selectedDiseases,
+					beneficiaryId: beneficiaryId,
+					hasdisability: hasdisability   // 🔥 الجديد
+				}),
+
+				success: function (res) {
+
+					showToast("نجاح", "تم حفظ البيانات بنجاح", "success");
+
+					$('#familyMemberTable').DataTable().ajax.reload();
+					$('#FamilyBeneficiaryDiseaseModal').modal('hide');
+				},
+
+				error: function (err) {
+
+					console.log(err);
+					showToast("خطأ", "حدث خطأ أثناء الحفظ", "error");
+				}
+			});
+		}
+
+
+
+
+
+
+
+
+
+
+
+					  $('#formBeneficiaryDisease').on('submit', function (e) {
+				  e.preventDefault();
+
+						saveBeneficiaryDiseasesForBeneficiary();
+			  });
+
+
+						function saveBeneficiaryDiseasesForBeneficiary() {
+
+			var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+			var beneficiaryId = $('#employeeIdforDisease').val();
+
+			let selectedDiseases = [];
+
+			// ✅ نجيب الأمراض فقط (نستثني الإعاقة)
+			$('#diseaseContainercheckbox .form-check-input:checked').each(function () {
+
+				selectedDiseases.push({
+					beneficiaryId: beneficiaryId,
+					diseaseId: Number($(this).val()),
+					isActive: true
+				});
+			});
+
+			// ✅ نجيب قيمة الإعاقة
+			let hasdisability = $('#isDisabled').is(':checked');
+
+			// 🔄 Loading
+			showToast("جاري الحفظ", "يرجى الانتظار...", "info");
+
+			$.ajax({
+			url: `${apiBaseUrl}api/BeneficiaryDisease/CreateBeneficiaryDiseaseList`,
+		     /// url: 'https://localhost:2001/api/BeneficiaryDisease/CreateBeneficiaryDiseaseList',
+
+				type: "POST",
+				contentType: "application/json",
+
+				data: JSON.stringify({
+					models: selectedDiseases,
+					beneficiaryId: beneficiaryId,
+					hasdisability: hasdisability   // 🔥 الجديد
+				}),
+
+				success: function (res) {
+
+					showToast("نجاح", "تم حفظ البيانات بنجاح", "success");
+
+					$('#myTable').DataTable().ajax.reload();
+					$('#BeneficiaryDiseaseModal').modal('hide');
+				},
+
+				error: function (err) {
+
+					console.log(err);
+					showToast("خطأ", "حدث خطأ أثناء الحفظ", "error");
+				}
+			});
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				function showToast(title, message, type = 'success') {
+
+			const toastElement = $('#mainToast');
+			const toastTitle = $('#toastTitle');
+			const toastBody  = $('#toastBody');
+			const toastIcon  = $('#toastIcon');
+
+			// 🟢 النص
+			toastTitle.text(title);
+			toastBody.text(message);
+
+			// 🟢 Reset كامل
+			toastElement.removeClass('bg-success bg-danger bg-warning bg-info');
+			toastIcon.attr('class', 'bx'); // إعادة تعيين الأيقونة
+
+			// 🟢 تحديد النوع
+			switch (type) {
+				case 'success':
+					toastElement.addClass('bg-success text-white');
+					toastIcon.addClass('bx-check-circle');
+					break;
+
+				case 'error':
+					toastElement.addClass('bg-danger text-white');
+					toastIcon.addClass('bx-x-circle');
+					break;
+
+				case 'warning':
+					toastElement.addClass('bg-warning text-dark');
+					toastIcon.addClass('bx-error-circle');
+					break;
+
+				case 'info':
+					toastElement.addClass('bg-info text-white');
+					toastIcon.addClass('bx-info-circle');
+					break;
+			}
+
+			// 🟢 تشغيل Toast
+			const toast = new bootstrap.Toast(toastElement[0]);
+			toast.show();
+		}
+
+
+
+
+
+
+
+
+
+
+	</script>
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
 }

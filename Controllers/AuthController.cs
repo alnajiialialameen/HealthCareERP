@@ -14,6 +14,7 @@ namespace HealthERP.Controllers
             _configuration = configuration;
             ApiBaseUrl = _configuration.GetValue<string>("ApiSettings:BaseUrl") ?? "";
         }
+
         public IActionResult Index()
         {
             ViewBag.ApiBaseUrl = ApiBaseUrl;

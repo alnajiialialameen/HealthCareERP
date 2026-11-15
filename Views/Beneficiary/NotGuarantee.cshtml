@@ -1,27 +1,47 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<style>
+    .table-warning {
+
+        background-color: #fff3cd !important;
+    }
+
+        .table-warning td {
+            background-color: rgb(247, 201, 108) !important;
+/*             font-weight: bold;
+ */        }
 
 
+    .select2-container .select2-selection--single {
+        height: 38px;
+        display: flex;
+        align-items: center;
+    }
+
+    .select2-selection__arrow {
+        height: 38px;
+    }
+
+    .select2-container {
+        z-index: 2055; /* أعلى من المودال */
+    }
+
+
+
+
+</style>
+
+<input id="userYearId" name="userYearId" hidden type="text" />
 <div class="row">
     <div class="col-lg-12 mb-4 order-0">
         <div class="card">
             <div class="card-body">
                 <h4>ادارة  غير المكفولين</h4>
-                <p class="d-flex justify-content-end">
-                    <button onClick="goToHome()" type="button" class="btn btn-secondary btn-sm">
-                        <i class="bx bx-arrow-back me-2"></i>
-                        رجوع
-                    </button>
-                </p>
 
-
-
-                <table id="myTable" class="table table-bordered  table-dark" style="width:100% ;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+                <table id="myTable" class="table table-bordered table-dark">
                     <thead>
                         <tr>
-
-                   
                             <th>الرقم</th>
                             <th>الاسم </th>
                             <th>الجنس </th>
@@ -33,20 +53,12 @@
                     <tbody>
                     </tbody>
                 </table>
-
             </div>
         </div>
     </div>
 </div>
 
-
-
 <!-- Create Modal -->
-
-
-
-
-
 <div class="modal fade" id="familyMemberModel" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
@@ -58,13 +70,9 @@
                         aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
-
-                <table id="familyMemberTable" class="table table-bordered  table-dark" style="width:100% ;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+                <table id="familyMemberTable" class="table table-danger table-bordered  table-dark" style="width:100% ;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
                     <thead>
                         <tr>
-
-
                             <th>الرقم</th>
                             <th>الاسم </th>
                             <th>صلة القرابة </th>
@@ -76,43 +84,17 @@
                     <tbody>
                     </tbody>
                 </table>
-
-
-
-
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                     Close
                 </button>
-               @*  <button type="button" class="btn btn-primary">Save changes</button> *@
             </div>
         </div>
     </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- Update Modal -->
-
-
-
-
 <div class="modal fade" id="exceptionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -124,12 +106,8 @@
                         aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              
-                           
                         <!-- Basic Layout -->
                 <form id="formAddException" name="formAddException" class="needs-validation" novalidate>
-
-                   
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="addFamilymemebernameshow">Name</label>
                         <div class="col-sm-10">
@@ -181,35 +159,16 @@
 
                         </div>
                     </div>
-                  
-                
                     <div class="row justify-content-end">
                         <div class="col-sm-10">
                             <button type="submit" class="btn btn-primary">اضافة</button>
-
                         </div>
                     </div>
                 </form>
-                        
-                            
-                                
-                              
-                           
-                
-                 
-             
             </div>
-           @*  <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                    Close
-                </button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div> *@
         </div>
     </div>
 </div>
-
-
 
 <div class="bs-toast toast toast-placement-ex m-2 fade top-0 end-0"
      id="mainToast"
@@ -229,16 +188,32 @@
 </div>
 
 
-
-
-
 @section Scripts {
     <script>
+
         $(document).ready(function () {
-            // قراءة الرابط من الـ ViewBag وتخزينه في متغير جافاسكريبت
+
+              $('#exceptionModal').on('shown.bs.modal', function () {
+            $('#addexception').select2({
+                dropdownParent: $('#exceptionModal'),
+                width: '100%',
+                dir: 'rtl',
+                placeholder: 'اختر الاستثناء',
+                allowClear: true
+            });
+        });
+
+
+
+
+
+
+
+            loadData();  // عشان اجيب السنة الشغال فيها المستخدم
             var apiBaseUrl = "@ViewBag.ApiBaseUrl";
 
-            var myDataTable=  $('#myTable').DataTable({
+            var dataTable= $('#myTable').DataTable({
+                  processing: true,  
             "ajax": {
                 "url": apiBaseUrl + "api/Beneficiary/NotConsumedEmployees",
                 "type": "GET",
@@ -290,7 +265,7 @@
             if (row.isConsumed !== true) {
                 addButton = `
                     <button type="button"
-                            class="btn btn-sm btn-success"
+                            class="btn btn-micro btn-success"
                             onclick="AddToBenficary(${row.id})"
                             title="إضافة">
                         <i class="bx bx-plus"></i>
@@ -323,17 +298,105 @@
                 $(row).addClass("table-warning"); // أو css مباشرة
             }
         },
-            "language": {
-                "search": "بحث:",
-                "paginate": {
-                    "next": "التالي",
-                    "previous": "السابق"
+            language: {
+                processing: "جارٍ التحميل...",
+                lengthMenu: "أظهر _MENU_ مدخلات",
+                zeroRecords: "لا توجد بيانات",
+                info: "إظهار _START_ إلى _END_ من أصل _TOTAL_",
+                infoEmpty: "لا توجد بيانات",
+                search: "بحث:",
+                paginate: {
+                    first: "الأول",
+                    previous: "السابق",
+                    next: "التالي",
+                    last: "الأخير"
                 }
-                // ... بقية الترجمة
             },
-            // تفعيل خاصية التحديد التلقائي للعرض
-            "autoWidth": false
+            dom: '<"top"l>rt<"bottom"ip><"clear">',
+            initComplete: function (settings, json) {
+                addSearchControl(json);
+            }
         });
+
+            function addSearchControl(json) {
+
+            $('#myTable thead').append($('#myTable thead tr:first').clone());
+
+            $('#myTable thead tr:eq(1) th').each(function (index) {
+
+                // أعمدة بدون بحث
+                if ([0,2,4,5,6].includes(index)) {
+                    $(this).html('');
+                    return;
+                }
+
+              
+                if (index === 3) {
+
+                            let select = $('<select class="form-select form-select-sm"><option value="">الكل</option></select>');
+                            let values = [];
+
+                            $.each(json.data, function (i, item) {
+                                        if (item.departmentName && !values.includes(item.departmentName)) {
+                                        values.push(item.departmentName);
+                                    select.append(
+                                        $('<option/>')
+                                                .val(item.departmentName)
+                                                .text(item.departmentName)
+                                    );
+                                }
+                            });
+
+                            $(this).html(select);
+
+                            $('select', this).on('change', function () {
+                                let val = $(this).val();
+                                dataTable
+                                    .column(index)
+                                    .search(val ? '^' + val + '$' : '', true, false)
+                                    .draw();
+                            });
+
+                            return;
+                        }
+
+                         
+                /* 🔍 INPUT لبقية الأعمدة */
+                $(this).html('<input type="text" class="form-control form-control-sm" placeholder="بحث" />');
+
+                $('input', this).on('keyup change', function () {
+                    dataTable.column(index).search(this.value).draw();
+                });
+
+            });
+        }
+
+
+
+           function loadData() {
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+            var userId = localStorage.getItem('userId');
+
+            $.ajax({
+                "url": apiBaseUrl + "api/WorkOn/"+ userId,
+                type: 'GET',
+                success: function (response) {
+
+                userYearId = response.data.yearId;
+                $("#userYearId").val(userYearId);
+                 // alert(userYearId);
+
+                },
+                error: function (err) {
+                    console.error(err);
+                }
+            });
+        }
+
+
+
+
+
 
 
          var apiBaseUrl = "@ViewBag.ApiBaseUrl";
@@ -345,6 +408,7 @@
      
 
         });
+
 
 
 
@@ -394,95 +458,10 @@
             toast.show();
         }
 
-
-
-            function goToHome() {
-               
-            // بناء الرابط مع إضافة معرف المستفيد بشكل صحيح
-            var url ="/Beneficiary";
-
-            // التوجيه إلى الرابط المطلوب
-            window.location.href = url;
-        }
-
-
-        //   function AddToBenficary(employeeId) {
-
-        //     var apiBaseUrl = "@ViewBag.ApiBaseUrl";
-        //     var HrAPIUrl = "@ViewBag.HrAPIUrl";
-
-        //     Swal.fire({
-        //         title: 'جاري جلب البيانات...',
-        //         allowOutsideClick: false,
-        //         didOpen: () => Swal.showLoading()
-        //     });
-
-        //     $.ajax({
-        //         url: `${HrAPIUrl}api/Employees/${employeeId}`,
-        //         type: "GET",
-        //         success: function (response) {
-
-        //             Swal.close();
-
-        //             if (response.status !== "Success") {
-        //                 Swal.fire('خطأ!', 'تعذر جلب بيانات الموظف', 'error');
-        //                 return;
-        //             }
-
-        //             const employee = response.data;
-
-        //             const dataToUpdate = {
-        //                     ClientId: parseInt(employee.id), // التأكد من أنه رقم
-        //                     YearId: 2,
-        //                     Name:employee.name,
-        //                     IsStoped: false,
-        //                     IsEmployee: true,
-        //                     Id: "0" // تأكد هل السيرفر يتوقع string أم int؟ إذا كان int امسح علامات التنصيص
-        //                 };
-
-
-        //             Swal.fire({
-        //                 title: 'جاري الحفظ...',
-        //                 allowOutsideClick: false,
-        //                 didOpen: () => Swal.showLoading()
-        //             });
-
-        //             // alert(dataToUpdate.Name)
-        //             $.ajax({
-        //                 url: apiBaseUrl + "api/Beneficiary/AddEmployeeToBeneficiaryCommand",
-        //                 type: "POST", // أو PUT حسب API
-        //                 contentType: "application/json",
-        //                 data: JSON.stringify(dataToUpdate),
-        //                 success: function (res) {
-
-        //                     Swal.close();
-
-
-        //                     if (res.status === "Success") {
-        //                         $('#myTable').DataTable().ajax.reload(null, false);
-        //                       showToast('نجاح', 'تمت إضافة بنجاح', 'success');
-        //                     } else {
-        //                      showToast('خطأ', 'حدث خطأ أثناء الحفظ', 'error');
-        //                     }
-        //                 },
-        //                 error: function () {
-        //                     Swal.close();
-        //                     showToast("حدث خطأ أثناء الحفظ", true);
-        //                 }
-        //             });
-        //         },
-        //         error: function () {
-        //             Swal.close();
-        //             Swal.fire('خطأ!', 'فشل الاتصال بالسيرفر', 'error');
-        //         }
-        //     });
-        // }
-
-
-
         function AddToBenficary(employeeId)
         {
-
+                    userYearId =$("#userYearId").val();
+                 
                     var apiBaseUrl = "@ViewBag.ApiBaseUrl";
                     var HrAPIUrl = "@ViewBag.HrAPIUrl";
 
@@ -493,13 +472,12 @@
                         didOpen: () => Swal.showLoading()
                     });
 
+                    
                     $.ajax({
                         url: `${HrAPIUrl}api/Employees/${employeeId}`,
                         type: "GET",
                         success: function (response) {
-
                             Swal.close();
-
                             if (response.status !== "Success") {
                                 Swal.fire('خطأ!', 'تعذر جلب بيانات الموظف', 'error');
                                 return;
@@ -507,10 +485,10 @@
 
                             const employee = response.data;
 
-                            // إنشاء FormData
-                            var formData = new FormData();
+/*                             // إنشاء FormData
+ */                            var formData = new FormData();
                             formData.append("ClientId", employee.id);
-                            formData.append("YearId", 2);
+                            formData.append("YearId", userYearId);
                             formData.append("Name", employee.name);
                             formData.append("IsStoped", false);
                             formData.append("IsEmployee", true);
@@ -563,7 +541,7 @@
 
 
 
-
+                //  عرض بيانات العائلة
 
            function viewFamily(EmployeeId)
            {
@@ -629,14 +607,13 @@
         }
 
 
+
+        /// عرض بيانات العائلة عن الضغط علي الزر
           function AddFamilyMember(employeeId) 
           {
-
-          
-
             var apiBaseUrl = "@ViewBag.ApiBaseUrl";
             var HrAPIUrl = "@ViewBag.HrAPIUrl";
-
+             userYearId =$("#userYearId").val();
             Swal.fire({
                 target: '#familyMemberModel', // 👈 مهم جدًا
                 title: 'جاري جلب البيانات...',
@@ -656,7 +633,7 @@
                     }
 
                     const employee = response.data;
-                   alert(employee.relativeRelationId);
+                   // alert(employee.relativeRelationId);
 
                     // ===============================
                     // 1️⃣ التحقق من البيانات
@@ -697,7 +674,7 @@
                     formData.append("ClientId", employee.id);
                     formData.append("Name", employee.name);
                     formData.append("IsStoped", false);
-                    formData.append("YearId", 2);
+                    formData.append("YearId", userYearId);
                     formData.append("IsEmployee", false);
                     formData.append("BirthDate", bDate);
                     formData.append("GenderId", gId);
@@ -727,7 +704,7 @@
                             Swal.close();
 
                             if (res.status === "Success" || res.status === "success") {
-                                $('#myTable').DataTable().ajax.reload(null, false);
+                                $('#familyMemberTable').DataTable().ajax.reload(null, false);
                                 showToast("تمت الإضافة بنجاح");
                             } else {
                                 Swal.fire({
@@ -821,11 +798,9 @@
                 $('#formAddException').on('submit', function (e) {
             AddFamilyMemberToToBenficaryHasException(e);
         });
-                     function AddFamilyMemberToToBenficaryHasException(e) {
-
-            // 1️⃣ منع إعادة تحميل الصفحة
+           function AddFamilyMemberToToBenficaryHasException(e) {      
             e.preventDefault();
-
+             userYearId =$("#userYearId").val();
             const form = document.getElementById('formAddException');
 
             // 2️⃣ Bootstrap Validation
@@ -868,7 +843,7 @@
             var formData = new FormData();
 
             formData.append("ClientId", parseInt(addFamilymemeberid));
-            formData.append("YearId", 2);
+            formData.append("YearId", userYearId);
             formData.append("Name", addFamilymemebername);
             formData.append("IsStoped", "false");
             formData.append("IsEmployee", "false");
@@ -890,8 +865,8 @@
             // 8️⃣ Ajax Request
             // ===============================
             $.ajax({
-                 url: `${apiBaseUrl}api/Beneficiary`,
-                // url: "https://localhost:2001/api/Beneficiary/",
+                  url: `${apiBaseUrl}api/Beneficiary`,
+                 // url: "https://localhost:2001/api/Beneficiary/",
                 type: "POST",
                 data: formData,
                 processData: false,

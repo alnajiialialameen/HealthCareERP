@@ -2,14 +2,18 @@
     ViewData["Title"] = "Home Page";
 }
 
-
+<style>
+    .select2-container--bootstrap-5 .select2-selection {
+      /*   min-height: 45px; */
+        padding: 6px 12px;
+    }
+</style>
 <div class="row">
     <div class="col-lg-12 mb-4 order-0">
         <div class="card">
             <div class="card-body">
-                <h4>ادارة الامراض</h4>
+                <h4>ادارة الامراض / @ViewBag.EmployeeName</h4>
                 <p>
-
                     <button type="button" id="addBeneficiaryDisease"
                             class="btn btn-primary"
                             data-bs-toggle="modal"
@@ -29,18 +33,12 @@
                     <tbody>
                     </tbody>
                 </table>
-
             </div>
         </div>
     </div>
 </div>
 
-
-
 <!-- Create Modal -->
-
-
-
 <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -56,12 +54,9 @@
                 <div class="row">
                     <div class="col mb-3">
                         <label for="addDisease" class="form-label">Name</label>
-                       @*  <input type="text" id="nameLarge" class="form-control" placeholder="Enter Name" /> *@
                         <select type="text" class="form-control select2" id="addDisease" name="addDisease" placeholder="Enter Disease" autocomplete="off"></select>
-
                     </div>
                 </div>
-               
             </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
@@ -71,7 +66,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -89,9 +83,7 @@
                         <div class="col mb-3">
                             <input type="hidden" id="edid" />
                             <label for="edDisease" class="form-label">Name</label>
-                            @*  <input type="text" id="nameLarge" class="form-control" placeholder="Enter Name" /> *@
                             <select type="text" class="form-control select2" id="edDisease" name="edDisease" placeholder="Enter Disease" autocomplete="off"></select>
-
                         </div>
                     </div>
 
@@ -104,52 +96,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-<!-- Update Modal -->
-@* <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
-        <form id="updateForm" class="needs-validation" novalidate>
-            <div class="modal-content">
-                <div class="modal-header">
-                    <input type="hidden" id="edit_id" />
-                    <h5 class="modal-title">تعديل مرض</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label for="edit_name" class="form-label">المرض</label>
-                            <input type="text" id="edit_name" class="form-control" placeholder="اضف اسم مرض"
-                                   required />
-                            <div class="invalid-feedback">
-                                الرجاء إدخال اسم مرض
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary"> تعديل </button>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
- *@
-
-
-
-
-
-
 
 <div class="bs-toast toast toast-placement-ex m-2 fade bg-success top-0 end-0"
      id="successToast"
@@ -168,16 +114,16 @@
     </div>
 </div>
 
-
 @section Scripts {
     <script>
+        var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+        var BeneficiaryId= "@ViewBag.BeneficiaryId";
+
         $(document).ready(function () {
             // قراءة الرابط من الـ ViewBag وتخزينه في متغير جافاسكريبت
-            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
-            var BeneficiaryId= "@ViewBag.BeneficiaryId";
+            var form = document.getElementById('addForm');
 
-
-                       $('#myTable').DataTable({
+         $('#myTable').DataTable({
             "ajax": {
                 "url": apiBaseUrl + "api/BeneficiaryDisease/ByEmployee/" + BeneficiaryId,
                 "type": "GET",
@@ -185,7 +131,7 @@
             },
             "columns": [
                 { "data": "id" },
-                { "data": "diseaseName" }, // تأكد أنها تطابق الـ JSON تماماً
+                { "data": "disease.name" }, // تأكد أنها تطابق الـ JSON تماماً
                 {
                     "data": null,
                     "orderable": false,
@@ -225,20 +171,35 @@
         });
 
 
-        var apiBaseUrl = "@ViewBag.ApiBaseUrl";
-        var form = document.getElementById('addForm');
 
-        $("#addBeneficiaryDisease").click(function () {
+            $('#createModal').on('shown.bs.modal', function () {
+            $('#addDisease').select2({
+                dropdownParent: $('#createModal'),
+                width: '100%',
+                placeholder: "-- اختر المرض --",
+                allowClear: true
+            });
 
-            getDiseaseId();
-            
+        });
+
+            $('#updateModal').on('shown.bs.modal', function () {
+
+            $('#edDisease').select2({
+                dropdownParent: $('#updateModal'),
+                width: '100%',
+                // placeholder: "-- اختر المرض --",
+                allowClear: true
+            });
 
         });
 
 
-               $('#addForm').on('submit', function (e) {
-            e.preventDefault();
+        $("#addBeneficiaryDisease").click(function () {
+            getDiseaseId();
+        });
 
+     $('#addForm').on('submit', function (e) {
+            e.preventDefault();
             // تأكد من تعريف متغير form
             var form = this;
 
@@ -266,9 +227,6 @@
                 isActive: true
             };
 
-            // alert("beneficiaryId"+beneficiaryId);
-            //   alert("diseaseId"+diseaseId);
-
             $.ajax({
                 url: apiBaseUrl + "api/BeneficiaryDisease",
                 type: "POST",
@@ -293,90 +251,81 @@
                 }
             });
         });
+    });
 
-        });
+     function getDiseaseId() {
 
-              function getDiseaseId() {
-            // تفريغ القائمة أولاً
-            $('#addDisease').empty();
+            var $select = $('#addDisease');
 
-            // إضافة القيمة الافتراضية -1
-            $('#addDisease').append('<option value="-1" selected disabled>-- اختر المرض --</option>');
+            // تفريغ القائمة
+            $select.empty();
 
-            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
-
-            $.ajax({
-                url: apiBaseUrl + "api/Disease",
-                type: "GET",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (result) {
-                    // نتحقق من وجود result.data بناءً على استجابة الـ API
-                    if (result && result.data) {
-                        var html = "";
-
-                        // المرور على المصفوفة الموجودة داخل data
-                        $.each(result.data, function (key, item) {
-                            html += "<option value='" + item.id + "'>" + item.name + "</option>";
-                        });
-
-                        // إضافة العناصر الجديدة
-                        $('#addDisease').append(html);
-
-                        // تحديث Select2 ليعرض البيانات الجديدة
-                        if ($('#addDisease').hasClass("select2-hidden-accessible")) {
-                            $('#addDisease').trigger('change');
-                        }
-                    }
-                },
-                error: function (errormessage) {
-                    console.error(errormessage.responseText);
-                }
-            });
-        }
-
-              function getDiseaseIded() {
-            // تفريغ القائمة أولاً
-            $('#edDisease').empty();
-
-            // إضافة القيمة الافتراضية -1
-            $('#edDisease').append('<option value="-1" selected disabled>-- اختر المرض --</option>');
-
-            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+            // إضافة placeholder
+            $select.append('<option></option>');
 
             $.ajax({
                 url: apiBaseUrl + "api/Disease",
                 type: "GET",
-                contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (result) {
-                    // نتحقق من وجود result.data بناءً على استجابة الـ API
-                    if (result && result.data) {
-                        var html = "";
 
-                        // المرور على المصفوفة الموجودة داخل data
-                        $.each(result.data, function (key, item) {
-                            html += "<option value='" + item.id + "'>" + item.name + "</option>";
+                    if (result && result.data) {
+
+                        $.each(result.data, function (i, item) {
+
+                            var option = new Option(item.name, item.id, false, false);
+                            $select.append(option);
+
                         });
 
-                        // إضافة العناصر الجديدة
-                        $('#edDisease').append(html);
-
-                        // تحديث Select2 ليعرض البيانات الجديدة
-                        if ($('#edDisease').hasClass("select2-hidden-accessible")) {
-                            $('#addDisease').trigger('change');
-                        }
+                        // تحديث Select2
+                        $select.trigger('change');
                     }
                 },
-                error: function (errormessage) {
-                    console.error(errormessage.responseText);
+                error: function (err) {
+                    console.error(err.responseText);
                 }
             });
         }
 
+     function getDiseaseIded() {
 
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+            var $select = $('#edDisease');
 
-           function deleteBeneficiaryDisease(id) {
+            return new Promise((resolve, reject) => {
+
+                $select.empty();
+                $select.append('<option></option>');
+
+                $.ajax({
+                    url: apiBaseUrl + "api/Disease",
+                    type: "GET",
+                    dataType: "json",
+                    success: function (result) {
+
+                        if (result && result.data) {
+
+                            $.each(result.data, function (i, item) {
+                                var option = new Option(item.name, item.id, false, false);
+                                $select.append(option);
+                            });
+
+                            $select.trigger('change');
+                            resolve(); // ✅ تم التحميل
+                        } else {
+                            reject("No data");
+                        }
+                    },
+                    error: function (err) {
+                        reject(err);
+                    }
+                });
+
+            });
+        }
+
+     function deleteBeneficiaryDisease(id) {
            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
              // تعريف الـ Toast باستخدام Bootstrap المدمج في القالب
              var toastElement = document.getElementById('successToast');
@@ -417,7 +366,7 @@
 
 
 
-          function showToast(message, isError = false) {
+     function showToast(message, isError = false) {
             const toastElement = $('#successToast');
             const toastBody = $('#successToastBody');
 
@@ -436,89 +385,120 @@
             toast.show();
         }
 
+     async function editBeneficiaryDisease(id) {
 
+            var beneficiaryId = "@ViewBag.BeneficiaryId";
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
 
+            try {
 
+                Swal.fire({
+                    title: 'جاري جلب البيانات...',
+                    allowOutsideClick: false,
+                    didOpen: () => { Swal.showLoading(); }
+                });
 
-            function editBeneficiaryDisease(id)
-            {
-                 var beneficiaryId = "@ViewBag.BeneficiaryId";
-                  $("#updateModal").modal('show');
-                getDiseaseIded();
-             var apiBaseUrl = "@ViewBag.ApiBaseUrl";
-             /// تحميل
+                // جلب البيانات
+                const response = await $.ajax({
+                    url: apiBaseUrl + "api/BeneficiaryDisease/" + id,
+                    type: "GET"
+                });
 
-            Swal.fire({
-                title: 'جاري جلب البيانات...',
-                allowOutsideClick: false,
-                didOpen: () => { Swal.showLoading(); }
-            });
+                if (response.status === "Success") {
 
-            $.ajax({
-                url: apiBaseUrl + "api/BeneficiaryDisease/" + id,
-                type: "GET",
-                success: function (response) {
-                    Swal.close(); // إغلاق رسالة التحميل
+                    $('#edid').val(response.data.id);
 
-                   
-                    if (response.status === "Success") {
-                        $('#edid').val(response.data.id);
-                        $('#edDisease').val(response.data.diseaseId);
-                        // alert(response.data.diseaseId);
-                        //---------اكتب بي كود التعديل هنا بناء علي Api-------
-                          $('#updateForm').on('submit', function (e) {
-              e.preventDefault();
+                    // ننتظر تحميل الأمراض
+                    await getDiseaseIded();
+                    $('#edDisease').val(response.data.diseaseId).trigger('change');
 
-            // if (!this.checkValidity()) {
-            //     $(this).addClass('was-validated');
-            //     return;
-            // }
-
-            const yearId = $('#edid').val();
-            const dataToUpdate = {
-                id: parseInt(yearId),
-                 diseaseId: $('#edDisease').val(),
-                 beneficiaryId: beneficiaryId,
-                 isActive: true
-            };
-
-            // إظهار سبينر التحميل في SweetAlert (فقط أثناء الانتظار)
-            Swal.fire({
-                title: 'جاري الحفظ...',
-                didOpen: () => { Swal.showLoading(); },
-                allowOutsideClick: false
-            });
-
-            $.ajax({
-                url: apiBaseUrl + "api/BeneficiaryDisease",
-                type: "PUT",
-                contentType: "application/json",
-                data: JSON.stringify(dataToUpdate),
-                success: function (response) {
-                    Swal.close(); // إغلاق سبينر التحميل
-                    $('#updateModal').modal('hide');
-                    $('#myTable').DataTable().ajax.reload();
-
-                    // استدعاء التوست الخاص بك
-                    showToast("تم تعديل  بنجاح!");
-                },
-                error: function (xhr) {
                     Swal.close();
-                    // إظهار توست خطأ
-                    showToast("حدث خطأ أثناء التعديل", true);
+
+                    $("#updateModal").modal('show');
                 }
-            });
+
+            } catch (error) {
+
+                Swal.fire('خطأ!', 'تعذر جلب البيانات', 'error');
+                console.error(error);
+            }
+        }
+
+
+                $('#updateForm').on('submit', function (e) {
+            e.preventDefault();
+            UpdateBeneficiaryDisease();
         });
 
+    async function UpdateBeneficiaryDisease() {
 
-                        $('#updateModal').modal('show');
-                    }
-                },
-                error: function (xhr) {
-                    Swal.fire('خطأ!', 'تعذر جلب بيانات السنة', 'error');
-                }
-            });
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+            var beneficiaryId = "@ViewBag.BeneficiaryId";
+
+            const dataToUpdate = {
+                id: parseInt($('#edid').val()),
+                diseaseId: $('#edDisease').val(),
+                beneficiaryId: beneficiaryId,
+                isActive: true
+            };
+
+            try {
+
+                // 🔄 تحميل
+                Swal.fire({
+                    title: 'جاري الحفظ...',
+                    allowOutsideClick: false,
+                    didOpen: () => { Swal.showLoading(); }
+                });
+
+                // ✅ إرسال الطلب باستخدام await
+                await $.ajax({
+                    url: apiBaseUrl + "api/BeneficiaryDisease",
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: JSON.stringify(dataToUpdate)
+                });
+
+                Swal.close();
+
+                // ✅ إغلاق المودال
+                $('#updateModal').modal('hide');
+
+                // ✅ تحديث الجدول
+                $('#myTable').DataTable().ajax.reload();
+
+                // ✅ رسالة نجاح
+                showToast("تم التعديل بنجاح!");
+
+            } catch (error) {
+
+                Swal.close();
+                showToast("حدث خطأ أثناء التعديل", true);
+                console.error(error);
+            }
         }
+
+
+
+
+
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     </script>
 }

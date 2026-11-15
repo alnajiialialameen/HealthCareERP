@@ -1,3 +1,332 @@
 ﻿@{
     ViewData["Title"] = "User Profile";
 }
+
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <input type="text" class="form-control" id="userId" name="userId" disabled hidden />
+
+            <div class="mb-3">
+                <label for="fullName" class="form-label">الاسم الكامل</label>
+                <input type="text" class="form-control" id="fullName" name="fullName" disabled />
+            </div>
+            <div class="mb-3">
+                <label for="userName" class="form-label">اسم المستخدم</label>
+                <input type="text" class="form-control" id="userName" name="userName" disabled />
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">الايميل</label>
+                <input type="text" class="form-control" id="email" name="email" disabled />
+            </div>
+            <div class="mb-3">
+                <label for="phoneNumber" class="form-label">رقم الهاتف</label>
+                <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" disabled />
+            </div>
+            <div class="mb-3">
+                <label for="role" class="form-label">الصلاحية</label>
+                <input type="text" class="form-control" id="role" name="role" disabled />
+            </div>
+            <div class="mb-3">
+                <label for="currentWorkOn" class="form-label">السنة الحالية</label>
+                <input type="text" class="form-control" id="currentWorkOn" name="currentWorkOn" disabled />
+            </div>
+        </div>
+        <div class="col-4">
+           <div class="row">
+               <div class="d-flex justify-content-between">
+                    <span class="text-dark">  انت تعمل علي العام <span class="fs-5 badge bg-success" id="userYear"></span> </span>
+                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#setWorkOnModal">
+                        <i class="menu-icon tf-icons bx bx-table"></i>
+                    </button>
+               </div>
+           </div>
+           <div class="row mt-4">
+                <div class="d-flex justify-content-between">
+                    <span class="text-dark">  تغيير كلمة المرور </span>
+                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                        <i class="bx bx-lock"></i>
+                    </button>
+                </div>
+           </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update WorkOn Year Modal -->
+<div class="modal fade" id="setWorkOnModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content shadow border-0 rounded-3">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">
+                    تعديل العام
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body py-4">
+
+                <div class="container-fluid">
+                    <div class="row align-items-center mb-2">
+
+                        <!-- Label -->
+                        <label for="setWorkOnList" class="col-md-2 col-form-label fw-semibold">
+                            العام
+                        </label>
+
+                        <!-- Select -->
+                        <div class="col-md-10">
+                            <select class="form-control" id="setWorkOnList">
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-outline-secondary px-4"
+                        data-bs-dismiss="modal">
+                    إلغاء
+                </button>
+
+                <button id="btnUpdateWorkon"
+                        onclick="UpdateWorkon()"
+                        type="button"
+                        class="btn btn-primary px-4">
+                    حفظ
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+
+            <!-- رأس الـ Modal -->
+            <div class="modal-header">
+                <h5 class="modal-title">تغيير كلمة المرور</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- جسم الـ Modal -->
+            <div class="modal-body">
+                <form id="changePasswordForm">
+
+                    <!-- كلمة المرور الحالية -->
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">كلمة المرور الحالية</label>
+                        <input type="password" id="currentPassword" class="form-control" placeholder="كلمة المرور الحالية" />
+                    </div>
+
+                    <!-- كلمة المرور الجديدة -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">كلمة المرور الجديدة</label>
+                        <input type="password" id="password" class="form-control" placeholder="كلمة المرور الجديدة" />
+                    </div>
+
+                    <!-- تأكيد كلمة المرور -->
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">تأكيد كلمة المرور الجديدة</label>
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="تأكيد كلمة المرور الجديدة" />
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- أزرار الـ Modal -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button id="btnChangePassword" type="button" class="btn btn-primary" onclick="ChangePassword()">حفظ</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+
+
+         $(document).ready(function () {
+             
+             loadData();
+        });
+
+        function loadData() {
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+            var userId = localStorage.getItem('userId');
+          
+            $.ajax({
+                "url": apiBaseUrl + "api/WorkOn/"+ userId,
+                type: 'GET',
+                success: function (response) {
+               
+         let yearName = response.data.yearName;
+
+        if (!yearName) {
+            $("#userYear").text("غير محدد").removeClass("badge bg-success").addClass("badge bg-danger");
+        } else {
+            $("#userYear").text(yearName).removeClass("badge bg-danger").addClass("badge bg-success");;
+        }
+                },
+                error: function (err) {
+                    console.error(err);
+                }
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+           // قراءة الرابط من الـ ViewBag وتخزينه في متغير جافاسكريبت
+           var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+           $(document).ready(function () {
+               var year = localStorage.getItem('year');
+               $('#userYear').text(year);
+               loadUserInfo();
+               loadWorkOnYears();
+            });
+
+
+        function loadUserInfo()
+        {
+            var userId = localStorage.getItem('userId');
+              // $('#roles').empty();
+                 $.get(`${apiBaseUrl}api/Auth/GetUserDetails`, {userId:userId}, function(response){
+                  if(response.status =="Success"){
+                    var data = response.data;
+                    $('#userId').val(data.id);
+                    $('#fullName').val(data.firstName);
+                    $('#userName').val(data.userName);
+                    $('#email').val(data.email);
+                    $('#phoneNumber').val(data.phoneNumber);
+                    $('#role').val(data.roles[0]);
+                    $('#currentWorkOn').val(data.roles[0]);
+                    
+               }
+           });
+        }
+
+                function loadWorkOnYears() {
+
+            var userId = localStorage.getItem('userId');
+
+            // 1️⃣ تحميل السنوات
+            $.get(`${apiBaseUrl}api/Year`, function (response) {
+
+                if (response.status == "Success") {
+
+                    var data = response.data;
+
+                    if (Array.isArray(data)) {
+
+                        $('#setWorkOnList').empty();
+                        $('#setWorkOnList').append(`<option value="-1">-إختار العام-</option>`);
+
+                        data.forEach(function (r) {
+                            $('#setWorkOnList').append(`<option value="${r.id}">${r.name}</option>`);
+                        });
+
+                        // 2️⃣ بعد تعبئة القائمة → نجيب السنة الحالية
+                        $.ajax({
+                            url: apiBaseUrl + "api/WorkOn/" + userId,
+                            type: 'GET',
+                            success: function (res) {
+
+                                if (res.status == "Success" && res.data) {
+
+                                    var selectedYearId = res.data.yearId;
+
+                                    // 3️⃣ تحديد القيمة داخل الـ dropdown
+                                    $('#setWorkOnList').val(selectedYearId).trigger('change');
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        function UpdateWorkon()
+        {
+                var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+                var userId = localStorage.getItem('userId');
+                var yearId = parseInt($('#setWorkOnList').val());
+                var year = $('#setWorkOnList option:selected').text();
+                console.log(userId)
+                console.log(yearId)
+
+                if (!userId || isNaN(yearId) || yearId <= 0) {
+                    return;
+                }
+                else{
+                    $.ajax({
+                       url:   `${apiBaseUrl}api/WorkOn/${userId}?yearId=${yearId}`,
+                    /// url: `https://localhost:2001/api/WorkOn/${userId}?yearId=${yearId}`,
+
+
+                        type: "PUT",
+                        success: function (res) {
+                            if (res.status === "Success") {
+                                localStorage.setItem('year', year); 
+                                $('#userYear').text(year);
+                                alert('تمت إضافة بنجاح');
+                            } else {
+                                alert('حدث خطأ أثناء الحفظ');
+                            }
+                        },
+                        error: function () {
+                            alert("حدث خطأ أثناء Exceptions");
+                        }
+                    });
+            }
+        }
+
+        function ChangePassword(){
+             var userId = localStorage.getItem('userId');
+             var password = $('#password').val();
+             var confirmPassword = $('#confirmPassword').val();
+
+                if (!confirmPassword || !confirmPassword || confirmPassword != password) {
+                    return;
+                }
+                else{
+                    $.ajax({
+                        url:   `${apiBaseUrl}api/Auth/ResetPassword?userId=${userId}&password=${password}`,
+                        type: "POST",
+                        success: function (res) {
+                            if (res.status === "Success") {
+                                alert('تمت إضافة بنجاح');
+                            } else {
+                                alert('حدث خطأ أثناء الحفظ');
+                            }
+                        },
+                        error: function () {
+                            alert("حدث خطأ أثناء Exceptions");
+                        }
+                    });
+            }
+        }
+    </script>
+}

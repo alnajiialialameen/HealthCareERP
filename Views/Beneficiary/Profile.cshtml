@@ -47,34 +47,34 @@
                 <div class="row">
                     <div class="col-6">
                         <h3>الاسم</h3>
-                        <input class="form-control" disabled id="EmployeeName" value="يوسف عبدالرحمن يوسف محمد" />
+                        <input class="form-control" disabled id="EmployeeName" value="" />
                     </div>
 
                     <div class="col-6">
                         <h3>الادارة</h3>
-                        <input class="form-control" disabled id="EmployeeDepartment" value="يوسف عبدالرحمن يوسف محمد" />
+                        <input class="form-control" disabled id="EmployeeDepartment" value="" />
                     </div>
                 </div>
 
                 <div class="row mt-5">
                     <div class="col-3">
                         <h3>تاريخ التعيين</h3>
-                        <input class="form-control" disabled id="EmployeeHireDate" value="23/03/2021" />
+                        <input class="form-control" disabled id="EmployeeHireDate" value="" />
                     </div>
 
                     <div class="col-3">
                         <h3>تاريخ الميلاد</h3>
-                        <input class="form-control" disabled id="EmployeeBirthDate" value="06/12/1991" />
+                        <input class="form-control" disabled id="EmployeeBirthDate" value="" />
                     </div>
 
                     <div class="col-3">
                         <h3>النوع</h3>
-                        <input class="form-control" disabled id="EmployeeGender" value="ذكر" />
+                        <input class="form-control" disabled id="EmployeeGender" value="" />
                     </div>
 
                     <div class="col-3">
                         <h3>الحالة الاجتماعية</h3>
-                        <input class="form-control" disabled id="EmployeeMartialStatus" value="متزوج" />
+                        <input class="form-control" disabled id="EmployeeMartialStatus" value="" />
                     </div>
                 </div>
             </div>
@@ -94,7 +94,7 @@
 
                     <div id="datafoundBlock" class="col-lg-12 col-md-6 col-sm-4 visually-hidden">
                         <h4 class="border-bottom border-4">أفراد العائلة</h4>
-                        <table class="table table-bordered table-striped" >
+                        <table class="table table-bordered" >
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -103,6 +103,7 @@
                                     <th>صلة القرابة</th>
                                     <th>حالة الكفالة</th>
                                     <th>تاريخ الميلاد</th>
+                                    <th> العمر</th>
 
                                 </tr>
                             </thead>
@@ -213,8 +214,8 @@
         var employeeId = $('#employeeId').val();
 
 
-        function getProfileData(){
-
+        function getProfileData()
+        {
             // main data
             $.get(`${HrAPIUrl}api/Employees/${employeeId}`, {}, function(response){
                 var data = response.data;
@@ -251,6 +252,7 @@
                                 <td>${member.relativeRelationName ?? ''}</td>
                                 <td>${member.isConsumed == true ? '<span class="text-success p-2  fs-4">مكفول</span>' : '<span class="text-danger p-2  fs-4">غير مكفول</span>'}</td>
                                 <td>${member.birthDate ?? ''}</td>
+                                <td>${member.currentAge ?? ''}</td>
                             </tr>
                         `;
 
@@ -380,6 +382,8 @@
                 previewDiv.style.fontSize = '22px';
             }
         }
+                               
+
     </script>
 
 }

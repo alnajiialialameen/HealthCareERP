@@ -11,11 +11,11 @@ namespace HealthERP.Controllers
             //_logger = logger;
             _configuration = configuration;
         }
-        public IActionResult BeneficiaryDisease(int id)
+        public IActionResult BeneficiaryDisease(int id, string name)
         {
             ViewBag.ApiBaseUrl = _configuration.GetValue<string>("ApiSettings:BaseUrl");
             ViewBag.BeneficiaryId = id;
-
+            ViewBag.EmployeeName = name;
 
             return View();
         }

@@ -1,16 +1,149 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿
+
+
+<style>
+    .icon-box {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+    .hover-card {
+        transition: all 0.3s ease;
+    }
+
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+</style>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+
+    <div class="row">
+
+
+
+        <div class="col-lg-12">
+            <div class="row">
+
+                <!-- Card 1 -->
+                <div class="col-lg-3 col-6 mb-4">
+                    <div class="card shadow-sm border-0 h-100 hover-card">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small">الاجمالي داخل الكفالة</span>
+                                <h3 id="totalBeneficiaries" class="fw-bold mt-2 text-primary"></h3>
+                            </div>
+                            <div class="icon-box bg-primary">
+                                <i class="bx bx-group text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="col-lg-3 col-6 mb-4">
+                    <div class="card shadow-sm border-0 h-100 hover-card">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small">اجمالي الموظفين</span>
+                                <h3 id="employees" class="fw-bold mt-2 text-success"></h3>
+                            </div>
+                            <div class="icon-box bg-success">
+                                <i class="bx bx-user text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="col-lg-3 col-6 mb-4">
+                    <div class="card shadow-sm border-0 h-100 hover-card">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small">افراد العائلة</span>
+                                <h3 id="family" class="fw-bold mt-2 text-warning"></h3>
+                            </div>
+                            <div class="icon-box bg-warning">
+                                <i class="bx bx-home text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="col-lg-3 col-6 mb-4">
+                    <div class="card shadow-sm border-0 h-100 hover-card">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small">امراض مزمنة</span>
+                                <h3 id="chronic" class="fw-bold mt-2 text-danger"></h3>
+                            </div>
+                            <div class="icon-box bg-danger">
+                                <i class="bx bx-plus-medical text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+              
+
+
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="row align-items-stretch">
+    <!-- الكارد الأول: الأمراض الأكثر شيوعًا -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">الأمراض المزمنة الأكثر شيوعًا</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="diseaseChart" style="width:100%; height:300px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- الكارد الثاني: Pie Chart -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0">توزيع الأمراض المزمنة بين الموظفين وأفراد العوائل</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="chronicPieChart" style="width:100%; height:300px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+  
 
 
 
 
 
-<!-- Small Modal -->
 
 
 
 
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 @section Scripts {
     <script>
@@ -18,27 +151,171 @@
             // قراءة الرابط من الـ ViewBag وتخزينه في متغير جافاسكريبت
             var apiBaseUrl = "@ViewBag.ApiBaseUrl";
 
-            $('#myTable').DataTable({
-                "ajax": {
-                    // دمج الرابط الأساسي مع مسار الـ Endpoint
-                    "url": apiBaseUrl + "api/Year",
-                    "type": "GET",
-                    "dataSrc": "data"
-                },
-                "columns": [
-                    { "data": "id" },
-                    { "data": "name" }
-                ],
-                "language": {
-                    "search": "بحث:",
-                    "paginate": {
-                        "first": "الأول",
-                        "last": "الأخير",
-                        "next": "التالي",
-                        "previous": "السابق"
+            // جلب بيانات الـ Home للكروت
+            $.ajax({
+                url: apiBaseUrl + "api/Home",
+                type: "GET",
+                success: function (response) {
+                    if (response.status === "Success") {
+                        var data = response.data;
+
+                        // تعبئة القيم داخل الكروت
+                        $("#totalBeneficiaries").text(data.sponsoredTndividuals);
+                        $("#employees").text(data.employeesUnderSponsorship);
+                        $("#family").text(data.familyMembersUnderSponsorship);
+                        $("#chronic").text(data.employeesWithChronicIllnesses);
                     }
+                },
+                error: function (err) {
+                    console.log("Error:", err);
                 }
             });
-        });
+
+            // جلب بيانات الأمراض المزمنة للرسم البياني
+            $.ajax({
+                url: apiBaseUrl + "api/Home/GetTopChronicDiseases",
+                method: 'GET',
+                success: function(response) {
+                    if(response.status === "Success") {
+                        const labels = response.data.map(d => d.diseaseName.trim());
+                        const counts = response.data.map(d => d.count);
+
+                        const ctx = document.getElementById('diseaseChart').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'عدد الحالات',
+                                    data: counts,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        precision:0
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        alert("لم يتم جلب البيانات بنجاح");
+                    }
+                },
+                error: function() {
+                    alert("حدث خطأ أثناء الاتصال بالخادم");
+                }
+            });
+
+
+
+
+            //      $.ajax({
+            //     url: apiBaseUrl + "api/Home",
+            //     type: "GET",
+            //     success: function (response) {
+            //         if (response.status === "Success") {
+            //             var data = response.data;
+
+            //             // الموظفين الذين لديهم امراض مزمنة
+            //             $("#employeesWithChronicIllnesses").text(data.employeesWithChronicIllnesses);
+            //                // افراد عوائل الموظفين الذي لديهم امراض مزمنة
+            //             $("#familyMemeberWithChronicIllnesses").text(data.familyMemeberWithChronicIllnesses);
+                      
+            //         }
+            //     },
+            //     error: function (err) {
+            //         console.log("Error:", err);
+            //     }
+            // });
+
+
+
+                  
+     
+         
+
+            $.ajax({
+                url: apiBaseUrl + "api/Home",
+                type: "GET",
+                success: function (response) {
+                    if (response.status === "Success") {
+                        var data = response.data;
+
+                        // تحديث النصوص في الكروت
+                        $("#employeesWithChronicIllnesses").text(data.employeesWithChronicIllnesses);
+                        $("#familyMemeberWithChronicIllnesses").text(data.familyMemeberWithChronicIllnesses);
+
+                        // بيانات الـ Pie Chart
+                        const pieLabels = ['الموظفين', 'أفراد العوائل'];
+                        const pieData = [
+                            data.employeesWithChronicIllnesses,
+                            data.familyMemeberWithChronicIllnesses
+                        ];
+
+                        const ctxPie = document.getElementById('chronicPieChart').getContext('2d');
+                        new Chart(ctxPie, {
+                            type: 'pie',
+                            data: {
+                                labels: pieLabels,
+                                datasets: [{
+                                    data: pieData,
+                                    backgroundColor: [
+                                        'rgba(54, 162, 235, 0.7)', // الموظفين
+                                        'rgba(255, 206, 86, 0.7)'  // العوائل
+                                    ],
+                                    borderColor: [
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 206, 86, 1)'
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom'
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(context) {
+                                                const total = context.dataset.data.reduce((a,b) => a+b, 0);
+                                                const value = context.raw;
+                                                const percentage = ((value / total) * 100).toFixed(1);
+                                                return `${context.label}: ${value} (${percentage}%)`;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                },
+                error: function (err) {
+                    console.log("Error:", err);
+                }
+            });
+       
+   
+
+
+
+
+
+
+
+        }); // نهاية $(document).ready()
     </script>
 }
+
+
+
+
+
+   

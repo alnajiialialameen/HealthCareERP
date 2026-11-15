@@ -18,7 +18,11 @@ namespace HealthERP.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.ApiBaseUrl = _configuration.GetValue<string>("ApiSettings:BaseUrl");
+            //ViewBag.ApiBaseUrl = _configuration.GetValue<string>("ApiSettings:BaseUrl");
+            ViewBag.ApiBaseUrl = ApiBaseUrl;
+            ViewBag.HrAPIUrl = HrAPIUrl;
+           
+            //ViewBag.Image = $"{HrAPIUrl}{id}/FamilyMembers/";
 
             return View();
         }
@@ -32,7 +36,7 @@ namespace HealthERP.Controllers
         }
     
         public IActionResult Profile(int id)
-        {
+       {
             ViewBag.ApiBaseUrl = ApiBaseUrl;
             ViewBag.HrAPIUrl = HrAPIUrl;
             ViewBag.EmployeeId = id;

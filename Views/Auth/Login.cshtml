@@ -2,178 +2,228 @@
 @{
     Layout = "";
 }
-<html lang="en"
-      class="light-style customizer-hide"
-      dir="rtl"
-      data-theme="theme-default"
-      data-assets-path="../assets/"
-      data-template="vertical-menu-template-free">
+<html lang="ar" dir="rtl" data-theme="theme-default">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل الدخول | نظام الرعاية الصحية</title>
 
-    <title>Login Basic - Pages | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
-
-    <meta name="description" content="" />
+    <link rel="stylesheet" href="~/Temp/assets/vendor/fonts/boxicons.css" />
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+   @*  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'> *@
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .login-card {
+            background: #fff;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .login-illustration {
+           /*  background: #f8f9fa; */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+            .login-illustration img {
+                max-width: 80%;
+                height: auto;
+               /*  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); */
+            }
+
+        .form-section {
+            padding: 50px;
+        }
+
+        .app-brand-text {
+            color: #696cff;
+            font-size: 1.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid #d9dee3;
+        }
+
+            .form-control:focus {
+                box-shadow: 0 0 0 0.25rem rgba(105, 108, 255, 0.1);
+                border-color: #696cff;
+            }
+
+        .btn-primary {
+            background-color: #696cff;
+            border-color: #696cff;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+            .btn-primary:hover {
+                background-color: #5f61e6;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(105, 108, 255, 0.3);
+            }
+
+        .input-group-text {
+            background: transparent;
+            border-inline-start: none;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
         #password {
-            direction: rtl;
-            text-align: right;
+            border-inline-end: none;
+        }
+
+        /* تحسينات للشاشات الصغيرة */
+        @@media (max-width: 991.98px) {
+            .login-illustration
+
+        {
+            display: none;
+        }
+
         }
     </style>
 </head>
 
 <body>
-    <!-- Content -->
-
-    <div class="container mt-5">
-        <div class="row mt-5">
-            <div class="col-6 mt-5">
-                <h3 class="position-absolute text-info fs-5">
-                    نظام إدارة الرعاية الصحية
-                </h3>
-                <img class="img-fluid h-100" style="height: -webkit-fit-content" src="~/login-img.jpg" />
-            </div>
-            <div class="col-6 mt-5">
-                <div class="authentication-wrapper authentication-basic container-p-y">
-                    <div class="authentication-inner">
-                        <!-- Register -->
-                        <div class="card">
-                            <div class="card-body">
-                                <!-- Logo -->
-                                <div class="d-flex flex-column justify-content-center mt-5">
-                                    <a href="index.html" class="app-brand-link gap-2 mt-5">
-                                        <h3 class="app-brand-text demo text-body fw-bolder text-center">SACL Health Care</h3>
-                                    </a>
-                               
-                                    <!-- /Logo -->
-                                    <h4 class="mb-2 text-center">مرحبا بك </h4>
-                                    <p class="mb-4 text-center">الرجاء ادخال بيانات تسجيل الدخول [اسم المستخدم وكلمة المرور]</p>
-                                </div>
-                                <form id="formAuthentication" class="mb-3" method="POST">
-                                    <div class="mb-3">
-                                        <label for="userName" class="form-label">اسم المستخدم</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               id="userName"
-                                               name="userName"
-                                               placeholder="اسم المستخدم"
-                                               autocomplete="off"
-                                               autofocus />
-                                    </div>
-
-                                    <div class="col-lg-12">
-                                        <div class="form-group">
-                                            <label for="password">كلمة المرور</label>
-                                            <div class="input-group input-group-merge">
-                                                <input type="password"
-                                                       class="form-control password text-end"
-                                                       id="password"
-                                                       name="Password"
-                                                       placeholder="كلمة المرور"
-                                                       autocomplete="off">
-                                                <span class="input-group-text toggle-password" style="cursor: pointer;">
-                                                    <i id="toggleIcon" class='bx bx-eye'></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    
-                                    <div class="mb-3">
-                                       
-                                    </div>
-                                    <div class="mb-5 mt-5">
-                                        <button class="btn btn-primary d-grid w-100 mb-3" type="submit">تسجيل دخول</button>
-                                    </div>
-                                </form>
-
-                            </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12">
+                <div class="card login-card">
+                    <div class="row g-0">
+                        <div class="col-lg-6 login-illustration">
+                            <h3 class="text-primary fw-bold mb-4">نظام إدارة الرعاية الصحية</h3>
+                            <img src="~/L6.jpg" alt="Healthcare Illustration" onerror="this.src='https://illustrations.popsy.co/flat/medical-care.svg'">
                         </div>
-                        <!-- /Register -->
+
+                        <div class="col-lg-6 form-section">
+                            <div class="text-center mb-5">
+                                <h3 class="app-brand-text fw-bold mb-2">SACL Health Care</h3>
+                                <h5 class="text-muted">مرحباً بك مجدداً! 👋</h5>
+                                <p class="text-secondary small">الرجاء إدخال بيانات حسابك للمتابعة</p>
+                            </div>
+
+                            <form id="formAuthentication" novalidate>
+                                <div class="mb-4">
+                                    <label for="userName" class="form-label fw-semibold">اسم المستخدم</label>
+                                    <div class="input-group">
+                                       @*  <span class="input-group-text"><i class='bx bx-user'></i></span> *@
+                                        <input type="text" class="form-control" id="userName" name="userName" placeholder="أدخل اسم المستخدم" required autofocus>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="password" class="form-label fw-semibold">كلمة المرور</label>
+                                    <div class="input-group">
+                                     @*    <span class="input-group-text toggle-password"><i id="toggleIcon" class='bx bx-eye'></i></span> *@
+                                        <input type="password" class="form-control text-end" id="password" name="Password" placeholder="••••••••" required>
+@*                                         <span class="input-group-text"><i class='bx bx-lock-alt'></i></span>
+ *@                                        <span class="input-group-text toggle-password"><i id="toggleIcon" class='bx bx-show'></i></span>
+
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 d-flex justify-content-between align-items-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="remember-me">
+                                        <label class="form-check-label" for="remember-me"> تذكرني </label>
+                                    </div>
+                                    <a href="#" class="small text-decoration-none">نسيت كلمة المرور؟</a>
+                                </div>
+
+                                <button class="btn btn-primary w-100 mb-3" type="submit">
+                                    <i class='bx bx-log-in-circle me-1'></i> تسجيل الدخول
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-            @* <div class="col-4"></div> *@
         </div>
     </div>
 
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-            <script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            const togglePassword = document.querySelector(".toggle-password");
-                            const passwordInput = document.getElementById("password");
-                            const toggleIcon = document.getElementById("toggleIcon");
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // تبديل رؤية كلمة المرور
+                   $('.toggle-password').click(function () {
+            const passwordInput = $('#password');
+            const toggleIcon = $('#toggleIcon');
 
-                            togglePassword.addEventListener("click", function () {
-                                const isPassword = passwordInput.type === "password";
-                                passwordInput.type = isPassword ? "text" : "password";
-
-                                toggleIcon.classList.toggle("bx-eye");
-                                toggleIcon.classList.toggle("bx-eye-slash");
-                            });
-                        });
-
-            </script>
-
-            <script>
-
-           $(document).ready(function () {
-              
-               var form = document.getElementById('formAuthentication');
-               $('#formAuthentication').on('submit', function (e) {
-                   e.preventDefault();
-
-                   if (!form.checkValidity()) {
-                       e.stopPropagation();
-                       $(form).addClass('was-validated');
-                       return;
-                   }
-
-                    var userName = $('#userName').val();
-                    var password = $('#password').val();
-                       
-                    var data =
-                    {
-                        email : userName,
-                        password: password
-                    };
-
-                    var apiBaseUrl = "@ViewBag.ApiBaseUrl";
-
-                   $.ajax({
-                       url: apiBaseUrl + "api/Auth/Login",
-                       type: 'POST',
-                       contentType: "application/json",
-                       data: JSON.stringify(data),
-                       success: function (response)
-                       {
-                           var token = response.data.token;
-                           var userName = response.data.userName;
-                           var userId = response.data.userId;
-
-                           localStorage.setItem('token', token);
-                           localStorage.setItem('userId', userId);
-                           localStorage.setItem('fullName', userName);
-
-                           form.reset();
-                           window.location.href = "/"
-                       },
-                       error: function (xhr)
-                       {
-                           var errorMsg = xhr.responseJSON ? xhr.responseJSON.message : "خطأ في الاتصال";
-                           alert(errorMsg);
-                           //  showToast(errorMsg,true);
-                       }
-                   });
-               });
+            if (passwordInput.attr('type') === 'password') {
+                passwordInput.attr('type', 'text');
+                toggleIcon.removeClass('bx-show').addClass('bx-hide');
+            } else {
+                passwordInput.attr('type', 'password');
+                toggleIcon.removeClass('bx-hide').addClass('bx-show');
+            }
         });
 
-            </script>
+
+            // معالجة تسجيل الدخول
+            $('#formAuthentication').on('submit', function (e) {
+                e.preventDefault();
+                const form = this;
+
+                if (!form.checkValidity()) {
+                    $(form).addClass('was-validated');
+                    return;
+                }
+
+                const data = {
+                    email: $('#userName').val(),
+                    password: $('#password').val()
+                };
+
+                const apiBaseUrl = "@ViewBag.ApiBaseUrl";
+
+                // تغيير حالة الزر أثناء الإرسال
+                const submitBtn = $(this).find('button[type="submit"]');
+                const originalText = submitBtn.html();
+                submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status"></span> جاري التحقق...');
+
+                $.ajax({
+                    url: apiBaseUrl + "api/Auth/Login",
+                    type: 'POST',
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        localStorage.setItem('token', response.data.token);
+                        localStorage.setItem('userId', response.data.userId);
+                        localStorage.setItem('fullName', response.data.userName);
+                        window.location.href = "/";
+                    },
+                    error: function (xhr) {
+                        submitBtn.prop('disabled', false).html(originalText);
+                        const errorMsg = xhr.responseJSON ? xhr.responseJSON.message : "فشل تسجيل الدخول، تأكد من البيانات";
+                        alert(errorMsg);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

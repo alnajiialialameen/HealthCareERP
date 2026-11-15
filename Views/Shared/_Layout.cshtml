@@ -31,15 +31,184 @@
     <link rel="stylesheet" href="~/Temp/assets/vendor/css/core.css" class="template-customizer-core-css" />
     <link rel="stylesheet" href="~/Temp/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="~/Temp/assets/css/demo.css" />
-
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="~/Temp/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
     <link rel="stylesheet" href="~/Temp/assets/vendor/libs/apex-charts/apex-charts.css" />
+
+
+    <link href="~/temp/fonts/basic/boxicons.css" rel="stylesheet" />
+    <link href="~/temp/fonts/basic/boxicons.min.css" rel="stylesheet" />
 
     <!-- Page CSS -->
     <!-- Helpers -->
     <script src="~/Temp/assets/vendor/js/helpers.js"></script>
     <script src="~/Temp/assets/js/config.js"></script>
+
+    <style>
+          body {
+            font-family: 'Cairo', sans-serif;
+                }
+
+     
+
+       
+
+        .dropdown-menu.show{
+            transform: translate3d(0px, 0px, 0px) !important;
+        }
+
+
+        menu-vertical, .menu-vertical .menu-block, .menu-vertical .menu-inner > .menu-item, .menu-vertical .menu-inner > .menu-header {
+            width: 15rem;
+        }
+
+        .menu-vertical, .menu-vertical .menu-block, .menu-vertical .menu-inner > .menu-item, .menu-vertical .menu-inner > .menu-header {
+            width: 13rem !important;
+        }
+
+        [dir="rtl"] .menu-vertical .menu-item .menu-toggle {
+            padding-left: 0rem !important;
+            
+        }
+
+        .menu-vertical .menu-inner > .menu-item .menu-link {
+            margin: unset !important;
+        }
+
+
+        .menu-inner .bx{
+           /*  color: #03b0d4; */
+            color: darkslateblue;
+          /*   background-color: #03b0d4;
+            border-color: #03b0d4; */
+            
+        }
+
+        .bg-menu-theme .menu-link, .bg-menu-theme .menu-horizontal-prev, .bg-menu-theme .menu-horizontal-next {
+            color: #393c40;
+        
+            /* إضافة خطوط تدعم العربية بشكل ممتاز */
+            font-family: 'Cairo', sans-serif !important; /* التأكد من تطبيق خط كايرو */
+            font-family: 'Cairo', sans-serif !important; /* التأكد من تطبيق خط كايرو */
+            font-size: 14px !important; /* تصغير الحجم */
+            font-weight: 600;
+            
+        }
+
+        [dir="rtl"] .menu-vertical .menu-sub .menu-link {
+            padding-right: 2.2rem;
+        }
+        [dir="rtl"] .form-select {
+       background-position: left 0.875rem center;
+        padding: 0.2375rem 0.875rem 0.2375rem 1.875rem;
+        color: black;
+        background-color:#fff;
+         max-width: 11rem;
+            min-width: 6rem;
+      }
+
+        .form-control {
+            color: #121313 !important;
+          
+        }
+
+        .card-body .table-def {
+           font-size:13.5px;
+            color: black !important;
+
+        }
+
+        .btn-micro {
+            padding: 2px 6px;
+            font-size: 11px;
+            line-height: 1;
+        }
+
+        .app-brand-link {
+       /*      font-family: 'Inter', 'Segoe UI', Tahoma, Arial, sans-serif; */
+            font-size: 18px;
+            font-weight: 600;
+            color: #5b6cff; /* أزرق مائل للبنفسجي مثل الصورة */
+         
+        }
+
+        .bx-dots-vertical-rounded{
+            color:white;
+            font-size:20px;
+        }
+
+        .dropdown-menu {
+       
+            color: black;
+         
+        }
+
+
+        .menu-link:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+            border-radius: 0.375rem;
+        }
+
+        .menu-sub .menu-link:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+
+        /* ------------------------------------------------------------------------- */
+        .select2-container--default .select2-selection--single {
+            height: 38px; /* الطول الجديد */
+            border-radius: 6px;
+            display: flex;
+            align-items: center; /* توسيط النص عمودي */
+        }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: normal; /* مهم */
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 100%; /* يجعل السهم في المنتصف */
+            }
+
+
+        /* Spinner داخل Select2 */
+        .select2-container--loading .select2-selection__rendered {
+            position: relative;
+        }
+
+        .select2-container--loading .spinner-select2 {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ccc;
+            border-top-color: #007bff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        @@keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .bg-menu-theme .menu-sub > .menu-item > .menu-link::before {
+            display: none !important;
+        }
+
+        .bg-menu-theme .menu-sub > .menu-item > .menu-link {
+            padding-right: 0.5rem !important; /* قللها حسب ما يناسبك */
+        }
+        /* ------------------------------------------------------------------------- */
+
+
+
+    </style> 
 </head>
 
 <body>
@@ -47,76 +216,110 @@
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             <!-- Menu -->
-            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-                <div class="app-brand demo">
-                    <a href="#" class="app-brand-link">
+            <aside id="layout-menu" class="layout-menu menu-vertical bg-menu-theme shadow-sm">
+                <!-- Brand -->
+                <div class="app-brand demo p-3 d-flex align-items-center justify-content-between">
+                    <a href="#" class="app-brand-link text-decoration-none fw-bold fs-5">
                         إدارة الرعاية الطبية
-                        @* <img src="~/Temp/image/logowithlightbackground.png" alt="AdminLTE Logo" aria-hidden="true" style="width:190px;"> *@
+                        @* <img src="~/Temp/image/logowithlightbackground.png" alt="Logo" style="width:150px;"> *@
                     </a>
-                    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-                        <i class="bx bx-chevron-left bx-sm align-middle"></i>
+                    <a href="javascript:void(0);" class="layout-menu-toggle d-block d-xl-none">
+                        <i class="bx bx-chevron-left bx-sm"></i>
                     </a>
                 </div>
+
                 <div class="menu-inner-shadow"></div>
+
                 <ul class="menu-inner py-1">
+
+                    <li class="menu-item">
+                        <a href="@Url.Action("Index", "Home")" class="menu-link d-flex align-items-center">
+                            <i class="menu-icon tf-icons bx bx-home-alt fs-5 me-2"></i>
+                            <span> الرئيسية</span>
+                        </a>
+                    </li>
                     <!-- Dashboard -->
-                    <li class="menu-item active">
-                        <a href="@Url.Action("Index", "Beneficiary")" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">ادارة المكفولين</div>
+                    <li class="menu-item">
+                        <a href="@Url.Action("Index", "Beneficiary")" class="menu-link d-flex align-items-center">
+                            <i class="menu-icon tf-icons bx bx-street-view fs-5 me-2"></i>
+                            <span>ادارة المكفولين</span>
                         </a>
                     </li>
 
-                    <!-- Layouts -->
                     <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-layout"></i>
-                            <div data-i18n="Layouts">البيانات الاساسية</div>
+                        <a href="@Url.Action("NotGuarantee", "Beneficiary")" class="menu-link d-flex align-items-center">
+                            <i class="menu-icon tf-icons bx bx-block fs-5 me-2"></i>
+                            <span>ادارة غير المكفولين</span>
                         </a>
-                        <ul class="menu-sub">
+                    </li>
+
+                    <!-- البيانات الاساسية -->
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle d-flex align-items-center">
+                            <i class="menu-icon tf-icons bx bx-layout fs-5 me-2"></i>
+                            <span>البيانات الاساسية</span>
+                        </a>
+                        <ul class="menu-sub ps-4">
                             <li class="menu-item">
                                 <a href="@Url.Action("Index", "Disease")" class="menu-link">
-                                    <div data-i18n="Without menu">الامراض</div>
+                                    <i class="bx bx-virus me-2"></i>
+                                    <span>الامراض</span>
+                                    
                                 </a>
+                               
+
                             </li>
                             <li class="menu-item">
                                 <a href="@Url.Action("Index", "Year")" class="menu-link">
-                                    <div data-i18n="Without navbar">السنوات</div>
+                                    <i class="bx bx-calendar-alt-2 me-2"></i>
+                                    <span>السنوات</span>
                                 </a>
                             </li>
                             <li class="menu-item">
                                 <a href="@Url.Action("Index", "ExceptionType")" class="menu-link">
-                                    <div data-i18n="Container">الاستثناءات</div>
+                                    <i class="bx bx-alarm-exclamation me-2"></i>
+                                    <span>الاستثناءات</span>
                                 </a>
                             </li>
                         </ul>
                     </li>
 
-                    <!-- Layouts -->
-                    <li class="menu-header small text-uppercase">
-                        <span class="menu-header-text">فاصل بين الخيارات</span>
-                    </li>
+                    <!-- التقارير -->
                     <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-dock-top"></i>
-                            <div data-i18n="Account Settings">قائمة منسدله ثانيه</div>
+                        <a href="javascript:void(0);" class="menu-link menu-toggle d-flex align-items-center">
+                            <i class="menu-icon tf-icons bx bx-printer fs-5 me-2"></i>
+                            <span>تقارير</span>
                         </a>
-                        <ul class="menu-sub">
+                        <ul class="menu-sub ps-4">
                             <li class="menu-item">
-                                <a href="pages-account-settings-account.html" class="menu-link">
-                                    <div data-i18n="Account">الخيار الاول</div>
+                                <a href="@Url.Action("MainReport", "Report")" class="menu-link">
+                                    <i class="bx bx bx-file-report me-2"></i>
+                                    <span>المكفولين بادارات </span>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="pages-account-settings-notifications.html" class="menu-link">
-                                    <div data-i18n="Notifications">الخيار الثاني</div>
+                                <a href="@Url.Action("BeneficiaryWithFamilyReport", "Report")" class="menu-link">
+                                    <i class="bx bx bx-file-report me-2"></i>
+                                    <span>المكفولين بافراد العائلة</span>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="pages-account-settings-connections.html" class="menu-link">
-                                    <div data-i18n="Connections">الخيار الصثالث</div>
+                                <a href="@Url.Action("BeneficiaryAddressReport", "Report")" class="menu-link">
+                                    <i class="bx bx bx-file-report me-2"></i>
+                                    <span>المكفوليين ببيانات السكن</span>
                                 </a>
                             </li>
+
+
+                            <li class="menu-item">
+                                <a href="@Url.Action("BeneficiaryDiseaseReport", "Report")" class="menu-link">
+                                    <i class="bx bx bx-file-report me-2"></i>
+                                    <span>المكفوليين بالامراض</span>
+                                </a>
+                            </li>
+
+
+                            
                         </ul>
                     </li>
                 </ul>
@@ -125,80 +328,57 @@
             <!-- Layout container -->
             <div class="layout-page">
                 <!-- Navbar -->
-                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+                <nav class="layout-navbar w-100"
                      id="layout-navbar">
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
                         <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
                             <i class="bx bx-menu bx-sm"></i>
                         </a>
                     </div>
-                    <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
 
-                        <!-- SetHistory -->
-                        <div class="navbar-nav-right d-flex align-items-center">
-                            <div class="nav-item d-flex align-items-center">
-                                <!-- Navbar month / year -->
-                                <li class="nav-link">
-                                    @*<a href="#" class="badge badge-warning " data-toggle="modal" data-target="#SetHistory" style="font-family:'Times New Roman', Times, serif">  تاريخ الصيانة  </a>*@
-                                    <span class="text-dark"> month / year : انت تعمل علي شهر</span>
-                                    @*@if (Session["month"] != null & Session["month"].ToString() != "" & Session["year"] != null & Session["year"].ToString() != null)
-            {
-        <button type="button" id="selectedDate" class="nav-link btn btn-warning" data-toggle="modal" data-target="#SetHistory">@Session["month"].ToString() / @Session["year"].ToString()</button>
-            }
-        else
-            {
-        <button type="button" id="selectedDate" class="nav-link btn btn-warning" data-toggle="modal" data-target="#upDateDateModal">التاريخ</button>
-            }*@
-                                    <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#SetHistory"><i class="menu-icon tf-icons bx bx-table" style="margin-right: 0rem;"> </i></button>
-                                </li>
-                            </div>
-                        </div>
-                        <!-- /SetHistory -->
-
-                        <ul class="navbar-nav flex-row align-items-center mr-auto">
-                            <!-- User -->
-                            <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                    <div class="avatar avatar">
-                                        <img src="~/Temp/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
-                                    </div>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0 me-3">
-                                                    <div class="avatar avatar">
-                                                        <img src="~/Temp/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1">
-                                                    <span id="logoUserName" class="fw-semibold d-block">Employee Name</span>
-                                                    <small class="text-muted">Admin</small>
+                    <ul class="navbar-nav flex-row justify-content-end me-5">
+                        <!-- User -->
+                        <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                            <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                                <div class="avatar avatar">
+                                    <img src="~/Temp/assets/img/avatars/1.png" class="w-px-40 h-auto rounded-circle" />
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" style="transform:none !important;">
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <div class="d-flex">
+                                            <div class="flex-shrink-0 me-3">
+                                                <div class="avatar avatar">
+                                                    <img src="~/Temp/assets/img/avatars/1.png" class="w-px-40 h-auto rounded-circle" />
                                                 </div>
                                             </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <div class="dropdown-divider"></div>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="auth/profile">
-                                            <i class="bx bx-user me-2"></i>
-                                            <span class="align-middle">الصفحة الشخصية</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="logout()">
-                                            <i class="bx bx-power-off me-2"></i>
-                                            <span class="align-middle">تسجيل الخروج</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <!--/ User -->
-                        </ul>
-                    </div>
+                                            <div class="flex-grow-1">
+                                                <span id="logoUserName" class="fw-semibold d-block">Employee Name</span>
+                                                <small class="text-muted">Admin</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="auth/profile">
+                                        <i class="bx bx-user me-2"></i>
+                                        <span class="align-middle">الصفحة الشخصية</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="logout()">
+                                        <i class="bx bx-power-off me-2"></i>
+                                        <span class="align-middle">تسجيل الخروج</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--/ User -->
+                    </ul>
                 </nav>
 
                 <!-- / Navbar -->
@@ -234,7 +414,7 @@
     <!-- / Layout wrapper -->
     <!-- Core JS -->
     <!-- build:js /Temp/assets/vendor/js/core.js -->
-    <script src="~/Temp/assets/vendor/libs/jquery/jquery.js"></script>
+    @* <script src="~/Temp/assets/vendor/libs/jquery/jquery.js"></script> *@
     <script src="~/Temp/assets/vendor/libs/popper/popper.js"></script>
     <script src="~/Temp/assets/vendor/js/bootstrap.js"></script>
     <script src="~/Temp/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
@@ -255,6 +435,7 @@
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
            $(document).ready(function () {
@@ -267,6 +448,7 @@
             window.location.href = '@Url.Action("Login", "Auth")';
         }
     </script>
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

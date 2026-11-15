@@ -1,0 +1,373 @@
+﻿<style>
+    .card-header {
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .form-label {
+        color: #212529;
+    }
+
+    .select2-container--bootstrap4 .select2-selection {
+        min-height: 38px;
+        padding: 4px 10px;
+    }
+
+    .my-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        border: 1.6px solid #afb2b3;
+    }
+
+        .my-table th {
+            background-color: #fff !important;
+            color: #222;
+            border: 1.6px solid #afb2b3;
+            padding: 12px;
+            text-align: center;
+            font-family:'Times New Roman';
+        }
+
+        .my-table td {
+            border: 1.6px solid #afb2b3;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #222;
+        }
+
+    .select2-container {
+        width: 100% !important;
+    }
+
+    .select2-dropdown {
+        z-index: 9999 !important;
+    }
+
+
+</style>
+<section class="content">
+
+    <div class="card shadow-sm border-0">
+
+        <!-- Header -->
+        <div class="card-header bg-light fw-bold">
+            <i class="bx bx-filter-alt me-1"></i>
+            خيارات البحث
+        </div>
+
+        <div class="card-body p-4">
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-3">
+                    <label for="BeneficiaryType" class="form-label fw-bold mb-2 text-dark">نوع المكفول</label>
+                    <select class="form-control select2bs4" id="BeneficiaryType">
+                        <option value="-1">الكل</option>
+                        <option value="1">موظفين</option>
+                        <option value="2">مكفولين</option>
+                    </select>
+                </div>
+
+                <!-- هذا هو الـ dropdown كامل -->
+                <div class="col-md-5" id="departmentWrapper" style="display:none;">
+                    <label for="DepartmentId" class="form-label fw-bold mb-2 text-dark">القسم</label>
+                    <select class="select2bs4 form-control" id="DepartmentId">
+                        <option value="">-- اختر الإدارة --</option>
+                    </select>
+                </div>
+
+               
+
+                <div class="col-md-4">
+                    <div class="d-flex gap-2">
+                        <button id="btnsearch" class="btn btn-primary flex-fill custom-btn-height">
+                            <i class="bx bx-search-alt-2"></i> بحث
+                        </button>
+                        <button id="btnReport" onclick="PrintData()" class="btn btn-outline-secondary flex-fill custom-btn-height">
+                            <i class="bx bxs-report"></i> طباعة
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Loader -->
+        <div id="tableLoader" class="text-center my-3" style="display:none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="mt-2 fw-bold">جاري تحميل البيانات...</div>
+        </div>
+
+        <div id="tableContainer">
+            <table class="table  table-bordered my-table mt-4" id="resultTable">
+                <thead class="table-dark ">
+                <tr>
+                    <th>#</th>
+                    <th>الاسم</th>
+                    <th>الجنس</th>
+                    <th>الحالة الاجتماعية</th>
+                    <th>القسم</th>
+                    <th> الكفالة</th>
+                  @*   <th> الكفالة</th> *@
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        </div>
+
+
+
+
+
+
+    </div>
+
+</section>
+
+@section scripts {
+
+    <script language="javascript" type="text/javascript">
+
+       
+
+
+
+        $(document).ready(function () {
+                  $('#BeneficiaryType').select2({
+            matcher: function (params, data) {
+                if ($.trim(params.term) === '') return data;
+
+                if (data.text.toLowerCase().includes(params.term.toLowerCase())) {
+                    return data;
+                }
+
+                return null;
+            }
+        });
+
+
+
+
+                   $('#DepartmentId').select2({
+            matcher: function (params, data) {
+                if ($.trim(params.term) === '') return data;
+
+                if (data.text.toLowerCase().includes(params.term.toLowerCase())) {
+                    return data;
+                }
+
+                return null;
+            }
+        });
+
+
+
+
+        });
+
+
+
+             $(function () {
+
+            function handleDepartmentVisibility() {
+                var value = $("#BeneficiaryType").val();
+
+                if (value === "1") {
+                    $("#departmentWrapper").fadeIn(); // يظهر كامل
+                     getDepartment();
+                } else {
+                    $("#departmentWrapper").fadeOut(); // يختفي كامل
+                    $("#DepartmentId").val(null).trigger('change'); // لو Select2
+                }
+            }
+
+            // عند تحميل الصفحة
+            handleDepartmentVisibility();
+
+            // عند التغيير
+            $("#BeneficiaryType").on("change", function () {
+                handleDepartmentVisibility();
+            });
+
+        });
+
+
+
+
+             $(document).ready(function () {
+             var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+             var HrAPIUrl = "@ViewBag.HrAPIUrl";
+             getDepartment();
+            
+        });
+
+
+            function getDepartment() {
+            var HrAPIUrl = "@ViewBag.HrAPIUrl";
+            var $deptSelect = $('#DepartmentId'); // تخزين العنصر في متغير لسهولة الاستخدام
+
+            $deptSelect.empty();
+            // إضافة القيمة الافتراضية
+            $deptSelect.append('<option value="-1" selected>-- الادارة --</option>');
+
+            $.ajax({
+              
+                url: HrAPIUrl + "api/Departments",
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result && result.data) {
+                        var html = "";
+
+                        $.each(result.data, function (key, item) {
+                            html += "<option value='" + item.id + "'>" + item.name + "</option>";
+                        });
+
+                        // الإصلاح: الإضافة للعنصر الصحيح
+                        $deptSelect.append(html);
+
+                        // الإصلاح: تحديث Select2 بشكل صحيح
+                        if ($deptSelect.hasClass("select2-hidden-accessible")) {
+                            $deptSelect.val("-1").trigger('change');
+                        }
+                    }
+                },
+                error: function (errormessage) {
+                    console.error("Error: ", errormessage.responseText);
+                }
+            });
+        }
+
+
+         
+
+          
+        $(document).ready(function () {
+
+            $('#btnsearch').on('click', function () {
+
+        // إظهار اللودر
+                $('#tableLoader').show();
+                $('#tableContainer').hide();
+
+            var apiBaseUrl = "@ViewBag.ApiBaseUrl";
+            var BeneficiaryType = $('#BeneficiaryType').val();
+            var departmentId = $('#DepartmentId').val();
+
+            $.ajax({
+                url: apiBaseUrl + "api/Report/GetBeneficiaryReportMain",
+                type: "GET",
+                data: {
+                    BeneficiaryType: BeneficiaryType,
+                    DepartmentId: departmentId
+                },
+                success: function (response) {
+
+                    if (response.status === "Success") {
+                      
+                        renderTable(response.data);
+
+
+                           // إخفاء اللودر
+                        $('#tableLoader').hide();
+                        $('#tableContainer').show();
+
+
+                    } else {
+                        alert(response.message);
+                    }
+
+                },
+                error: function (xhr) {
+                    console.error(xhr);
+                    alert("حدث خطأ أثناء جلب البيانات");
+                }
+            });
+
+        });
+
+
+
+        function renderTable(data) {
+
+             var tbody = $('#resultTable tbody');
+             tbody.empty();
+
+             if (data.length === 0) {
+                 tbody.append(`
+                     <tr>
+                         <td colspan="6" class="text-center text-muted">
+                             لا توجد بيانات
+                         </td>
+                     </tr>
+                 `);
+                 return;
+             }
+
+             $.each(data, function (index, item) {
+                 tbody.append(`
+                     <tr>
+                         <td>${index + 1}</td>
+                         <td>${item.name ?? '-'}</td>
+                         <td>${item.genderName ?? '-'}</td>
+                         <td>${item.martialStatusName ?? '-'}</td>
+                         <td>${item.departmentName ?? '-'}</td>
+                         <td>${item.beneficiaryTypeName ?? '-'}</td>
+                     </tr>
+                 `);
+             });
+         }
+
+
+
+
+        });
+
+
+
+
+            function PrintData() {
+
+            var BeneficiaryType = $('#BeneficiaryType').val();
+            var departmentId = $('#DepartmentId').val();
+
+            if (!BeneficiaryType && !departmentId) {
+                alert("يرجى تنفيذ البحث أولاً");
+                return;
+            }
+
+            var url = '/Report/PrintMain'
+                + '?BeneficiaryType=' + encodeURIComponent(BeneficiaryType)
+                + '&DepartmentId=' + encodeURIComponent(departmentId);
+
+            // window.location.href = url;
+            window.open(url, '_blank');
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+    </script>
+
+}
